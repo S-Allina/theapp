@@ -92,7 +92,7 @@ const StyledWrapper = styled.div`
     text-align: center;
     box-sizing: border-box;
     width: 50%;
-    background-image: url('/img/background.png');
+    background-image: url('../../public/img/background.png');
     min-height: 100vh;
     background-size: cover;
     background-repeat: no-repeat;
@@ -110,7 +110,7 @@ const StyledWrapper = styled.div`
   .logo {
     width: 35%;
     height: 7%;
-    background-image: url('/img/logo.png');
+    background-image: url('../../public/img/logo.png');
     background-size: contain;
     background-repeat: no-repeat;
     margin: 0;
