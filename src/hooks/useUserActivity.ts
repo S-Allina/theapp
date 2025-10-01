@@ -1,18 +1,27 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { useUpdateActivityMutation } from '../services/usersApi';
 import { useSelector } from 'react-redux';
-
+import { useLocation } from 'react-router-dom';
 export const useUserActivity = (interval = 30000) => {
   const [updateActivity] = useUpdateActivityMutation();
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const lastUpdateRef = useRef<number>(0);
   const isAuthenticated = useSelector((state: any) => state.auth.isAuthenticated);
+  const location = useLocation();
+
+  const shouldTrackActivity =
+    isAuthenticated && location.pathname !== '/register' && location.pathname !== '/login';
 
   const handleActivity = useCallback(async () => {
-    if (!isAuthenticated)  return;
-
+    if (!shouldTrackActivity) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      return;
+    }
     const now = Date.now();
-        if (now - lastUpdateRef.current >= interval) {
+    if (now - lastUpdateRef.current >= interval) {
       try {
         await updateActivity().unwrap();
         lastUpdateRef.current = now;
@@ -20,7 +29,7 @@ export const useUserActivity = (interval = 30000) => {
         console.warn('Failed to update activity:', error);
       }
     }
-  }, [updateActivity, isAuthenticated, interval]);
+  }, [updateActivity, shouldTrackActivity, interval]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -49,7 +58,7 @@ export const useUserActivity = (interval = 30000) => {
       events.forEach((event) => {
         document.removeEventListener(event, handleUserEvent);
       });
-      
+
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
