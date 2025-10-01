@@ -26,7 +26,7 @@ export const usersSlice = createSlice({
     toggleUserSelection: (state, action) => {
       const userId = action.payload;
       const selectedIndex = state.selectedUsers.indexOf(userId);
-      
+
       if (selectedIndex === -1) {
         state.selectedUsers.push(userId);
       } else {
@@ -34,7 +34,7 @@ export const usersSlice = createSlice({
       }
     },
     selectAllUsers: (state) => {
-      const allUserIds = state.users.map(user => user.id);
+      const allUserIds = state.users.map((user) => user.id);
       if (state.selectedUsers.length === allUserIds.length) {
         state.selectedUsers = [];
       } else {
@@ -44,13 +44,13 @@ export const usersSlice = createSlice({
   },
 });
 
-export const { 
-  setUsers, 
-  setLoading, 
-  setError, 
-  setSelectedUsers, 
-  toggleUserSelection, 
-  selectAllUsers 
+export const {
+  setUsers,
+  setLoading,
+  setError,
+  setSelectedUsers,
+  toggleUserSelection,
+  selectAllUsers,
 } = usersSlice.actions;
 
 export default usersSlice.reducer;

@@ -1,13 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_BASE_URL } from '../config/api';
 
-interface ApiResponse<T> {
-  isSuccess: boolean;
-  result: T;
-  displayMessage: string | null;
-  errorMessages: string[] | null;
-}
-
 const baseQuery = fetchBaseQuery({
   baseUrl: API_BASE_URL,
   prepareHeaders: (headers) => {
@@ -21,7 +14,7 @@ export const authApi = createApi({
   endpoints: (builder) => ({
     loginUser: builder.mutation<ApiResponse<LoginResponse>, LoginRequest>({
       query: (credentials) => ({
-        url: '/api/identity/login',
+        url: '/identity/login',
         method: 'POST',
         body: credentials,
         credentials: 'include',
@@ -43,7 +36,7 @@ export const authApi = createApi({
     }),
     registerUser: builder.mutation<ApiResponse<RegisterResponse>, RegisterRequest>({
       query: (userData) => ({
-        url: '/api/identity/register',
+        url: '/identity/register',
         method: 'POST',
         body: userData,
       }),
@@ -53,22 +46,22 @@ export const authApi = createApi({
       },
     }),
     forgotPassword: builder.mutation<ApiResponse<boolean>, string>({
-  query: (forgotPasswordRequest) => ({
-    url: '/api/identity/forgot-password',
-    method: 'POST',
-    body: forgotPasswordRequest,
-  }),
-}),
+      query: (forgotPasswordRequest) => ({
+        url: '/identity/forgot-password',
+        method: 'POST',
+        body: forgotPasswordRequest,
+      }),
+    }),
     resetPassword: builder.mutation<ApiResponse<boolean>, ResetPasswordDto>({
       query: (resetPasswordRequest) => ({
-        url: '/api/identity/reset-password',
+        url: '/identity/reset-password',
         method: 'POST',
         body: resetPasswordRequest,
       }),
     }),
     logoutUser: builder.mutation<ApiResponse<boolean>, void>({
       query: () => ({
-        url: '/api/identity/logout',
+        url: '/identity/logout',
         method: 'POST',
         credentials: 'include',
       }),
@@ -89,18 +82,23 @@ export const authApi = createApi({
   }),
 });
 
-export const { useLoginUserMutation, useLogoutUserMutation, useRegisterUserMutation, useForgotPasswordMutation,
-  useResetPasswordMutation } = authApi;
+export const {
+  useLoginUserMutation,
+  useLogoutUserMutation,
+  useRegisterUserMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
+} = authApi;
 
 interface LoginRequest {
   userName: string;
   password: string;
 }
 
-interface ResetPasswordDto{
-  email:string,
-  newPassword: string,
-  token: string
+interface ResetPasswordDto {
+  email: string;
+  newPassword: string;
+  token: string;
 }
 
 interface LoginResponse {
@@ -125,4 +123,11 @@ interface RegisterResponse {
   userId: string;
   userName: string;
   email: string;
+}
+
+interface ApiResponse<T> {
+  isSuccess: boolean;
+  result: T;
+  displayMessage: string | null;
+  errorMessages: string[] | null;
 }

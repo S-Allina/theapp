@@ -1,13 +1,22 @@
 import { useState } from 'react';
 import Toolbar from '@mui/material/Toolbar';
-import { alpha } from '@mui/material/styles';
 import { ActionButtons } from './ActionButtons';
 import { FilterInput } from './FilterInput';
 import { SnackbarManager } from './SnackbarManager';
 
 export function EnhancedTableToolbar(props) {
-  const { numSelected, selectedUsers, onBlockUsers, onUnblockUsers, onDeleteUsers, onFilterChange, onDeleteUnverifyUsers } = props;
+  const {
+    numSelected,
+    selectedUsers,
+    onBlockUsers,
+    onUnblockUsers,
+    onDeleteUsers,
+    onFilterChange,
+    onDeleteUnverifyUsers,
+  } = props;
+
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+
   const showSnackbar = (message, severity = 'success') => {
     setSnackbar({ open: true, message, severity });
   };
@@ -22,11 +31,7 @@ export function EnhancedTableToolbar(props) {
       await onBlockUsers(selectedUsers);
       showSnackbar(`Successfully blocked users`, 'success');
     } catch (error) {
-      if (error.message.includes('already blocked')) {
-        showSnackbar(error.message, 'warning');
-      } else {
-        showSnackbar('Failed to block users', 'error');
-      }
+      showSnackbar('Failed to block users', error);
     }
   };
 
@@ -43,7 +48,6 @@ export function EnhancedTableToolbar(props) {
   const handleDelete = async () => {
     if (selectedUsers.length === 0) return;
     try {
-      console.log('selectedUsers '+selectedUsers);
       await onDeleteUsers(selectedUsers);
       showSnackbar(`Successfully deleted ${selectedUsers.length} user(s)`);
     } catch (error) {
@@ -70,13 +74,9 @@ export function EnhancedTableToolbar(props) {
             display: 'flex',
             justifyContent: 'left',
             alignItems: 'center',
-            maxHeight:'20%',
-            gap:'10px',
-            flexWrap:'wrap'
-          },
-          numSelected > 0 && {
-            bgcolor: (theme) =>
-              alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+            maxHeight: '20%',
+            gap: '10px',
+            flexWrap: 'wrap',
           },
         ]}
       >
@@ -88,10 +88,8 @@ export function EnhancedTableToolbar(props) {
           onDelete={handleDelete}
           onDeleteUnverify={handleDeleteUnverifyUsers}
         />
-        
-        <FilterInput onFilterChange={onFilterChange}/>
+        <FilterInput onFilterChange={onFilterChange} />
       </Toolbar>
-
       <SnackbarManager snackbar={snackbar} onClose={handleCloseSnackbar} />
     </>
   );

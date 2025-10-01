@@ -3,12 +3,7 @@ import { TableRow, TableCell, Checkbox, Typography, Box } from '@mui/material';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 import { TimeAgo } from './TimeAgo';
 
-const UserRow = ({ 
-  row, 
-  isItemSelected, 
-  labelId, 
-  onUserClick 
-}) => {
+const UserRow = ({ row, isItemSelected, labelId, onUserClick }) => {
   const handleClick = (event) => {
     onUserClick(event, row.id);
   };

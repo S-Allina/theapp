@@ -1,5 +1,4 @@
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
+import { Tooltip, Button } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -13,38 +12,6 @@ export const ActionButtons = ({
   onDelete,
   onDeleteUnverify,
 }) => {
-  if (numSelected === 0) {
-    return (
-      <>
-        <Tooltip title="Block" sx={{ alignSelf: 'stretch' }}>
-          <Button
-            variant="outlined"
-            sx={{ mr: 0.625, width: '10%', fontSize: '0.5rem', alignSelf: 'stretch' }}
-            disabled
-          >
-            <LockIcon sx={{ mr: 0.625 }} />
-            Block
-          </Button>
-        </Tooltip>
-        <Tooltip title="Unblock" sx={{ alignSelf: 'stretch' }}>
-          <Button variant="outlined" sx={{ mr: 0.625 }} disabled>
-            <LockOpenIcon />
-          </Button>
-        </Tooltip>
-        <Tooltip title="Delete" sx={{ alignSelf: 'stretch' }}>
-          <Button variant="outlined" color="error" disabled>
-            <DeleteIcon />
-          </Button>
-        </Tooltip>
-        <Tooltip title="Delete selected users" sx={{ alignSelf: 'stretch' }}>
-          <Button variant="outlined" color="error" onClick={onDeleteUnverify}>
-            <UnsubscribeIcon sx={{ mr: 0.625 }} />
-          </Button>
-        </Tooltip>
-      </>
-    );
-  }
-
   return (
     <>
       <Tooltip
@@ -61,10 +28,11 @@ export const ActionButtons = ({
           Block ({numSelected})
         </Button>
       </Tooltip>
+
       <Tooltip title="Unblock selected users" sx={{ alignSelf: 'stretch' }}>
         <Button
           variant="outlined"
-          sx={{ mr: 0.625, width: '10%', fontSize: '0.5rem' }}
+          sx={{ mr: 0.625, width: '10%' }}
           onClick={onUnblock}
           disabled={selectedUsers.length === 0}
         >
@@ -77,8 +45,9 @@ export const ActionButtons = ({
           color="error"
           onClick={onDelete}
           sx={{ mr: 0.625, width: '10%', fontSize: '0.5rem' }}
+          disabled={selectedUsers.length === 0}
         >
-          <DeleteIcon sx={{ mr: 0.625 }} />
+          <DeleteIcon />
         </Button>
       </Tooltip>
       <Tooltip title="Delete unverify users" sx={{ alignSelf: 'stretch' }}>

@@ -55,8 +55,7 @@ export const authSlice = createSlice({
       localStorage.setItem('userEmail', action.payload.email);
       localStorage.setItem('status', action.payload.status);
     },
-    register: () => {
-    },
+    register: () => {},
     logout: (state) => {
       state.isAuthenticated = false;
       state.user = {

@@ -2,12 +2,9 @@ import { useLogoutUserMutation } from '../services/authApi';
 import { logout } from '../slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import { Box, Typography, Button } from '@mui/material';
 
 export function Header() {
-  
   const [logoutUser] = useLogoutUserMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();

@@ -54,7 +54,7 @@ const UsersToolbar = ({ selectedUsers, onSelectionClear, onFilterChange }) => {
       onUnblockUsers={handleUnblockUsers}
       onDeleteUsers={handleDeleteUsers}
       onDeleteUnverifyUsers={handleDeleteUnverifyUsers}
-        onFilterChange={onFilterChange}
+      onFilterChange={onFilterChange}
     />
   );
 };

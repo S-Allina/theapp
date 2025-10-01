@@ -1,19 +1,32 @@
-import FormControl from '@mui/material/FormControl';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputAdornment from '@mui/material/InputAdornment';
-import InputLabel from '@mui/material/InputLabel';
-import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
-import { Visibility, VisibilityOff, Email } from '@mui/icons-material';
+import {
+  FormControl,
+  Alert,
+  Box,
+  OutlinedInput,
+  InputAdornment,
+  InputLabel,
+  IconButton,
+  Button,
+} from '@mui/material';
 import { useState } from 'react';
-import { Alert,Box } from '@mui/material';
+import { Email, Visibility, VisibilityOff } from '@mui/icons-material';
 import { useRegisterUserMutation } from '../services/authApi';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../slices/authSlice';
+import { AuthLayout } from '../Layout/AuthLayout';
 
 export function Register() {
   const [showPassword, setShowPassword] = useState(false);
+  const [registerError, setRegisterError] = useState('');
+  const [firstnameValue, setFirstnameValue] = useState('');
+  const [lastnameValue, setLastnameValue] = useState('');
+  const [emailValue, setEmailValue] = useState('');
+  const [jobValue, setJobValue] = useState('');
+  const [password, setPassword] = useState('');
+  const [registerUser] = useRegisterUserMutation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -24,15 +37,6 @@ export function Register() {
   const handleMouseUpPassword = (event) => {
     event.preventDefault();
   };
-  const [firstnameValue, setFirstnameValue] = useState('');
-  const [lastnameValue, setLastnameValue] = useState('');
-  const [emailValue, setEmailValue] = useState('');
-  const [jobValue, setJobValue] = useState('');
-  const [password, setPassword] = useState('');
-  const [registerUser] = useRegisterUserMutation();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [registerError, setRegisterError] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -49,9 +53,9 @@ export function Register() {
 
       if (result.isSuccess && result.result && result.result.email != null) {
         dispatch(register());
-        navigate('/login', { 
-            replace: true,
-            state: { message: "Ваш профиль успешно создан, проверьте свою почту" } 
+        navigate('/login', {
+          replace: true,
+          state: { message: 'Your profile has been successfully created, check your email.' },
         });
       } else {
         console.log(result);
@@ -62,171 +66,101 @@ export function Register() {
         setRegisterError(err.data.displayMessage);
       } else {
         console.log(err);
-        setRegisterError('Неверный формат данных.');
+        setRegisterError('Invalid data format.');
       }
     }
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        width: '100vw',
-        textAlign: 'center',
-      }}
+    <AuthLayout
+      title="Create Your Account"
+      subtitle="Start your journey"
+      links={
+        <span>
+          Already have an account? <a href="/login">Sign In</a>
+        </span>
+      }
     >
-        <Box
-          sx={{
-            padding: '5rem',
-            boxSizing: 'border-box',
-            width: '50vw',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Box
-            sx={{
-              width: '35%',
-              height: '7%',
-              backgroundSize: 'contain',
-              backgroundImage: "url('../../public/img/logo.png')",
-              backgroundRepeat: 'no-repeat',
-              margin: 0,
-            }}
+      <form className="form" onSubmit={handleSubmit}>
+        {registerError && (
+          <Alert severity="error" sx={{ marginBottom: 2 }}>
+            {registerError}
+          </Alert>
+        )}
+        <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
+          <InputLabel htmlFor="outlined-adornment-weight">Firstname</InputLabel>
+          <OutlinedInput
+            value={firstnameValue}
+            onChange={(e) => setFirstnameValue(e.target.value)}
+            id="outlined-adornment-weight"
+            aria-describedby="outlined-weight-helper-text"
+            inputProps={{ 'aria-label': 'weight' }}
           />
-          <Box
-            sx={{
-              padding: '5rem',
-              width: 'auto',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
-            }}
-          >
-            <h6 className="subtitle">Start your journey</h6>
-            <h2 className="title">Sign In to The App</h2>
-            <form className="form" onSubmit={handleSubmit}>
-              {registerError && (
-                <Alert severity="error" sx={{ marginBottom: 2 }}>
-                  {registerError}
-                </Alert>
-              )}
-              <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
-                <InputLabel htmlFor="outlined-adornment-weight">Firstname</InputLabel>
-                <OutlinedInput
-                  value={firstnameValue}
-                  onChange={(e) => setFirstnameValue(e.target.value)}
-                  id="outlined-adornment-weight"
-                  aria-describedby="outlined-weight-helper-text"
-                  inputProps={{
-                    'aria-label': 'weight',
-                  }}
-                />
-              </FormControl>
-              <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
-                <InputLabel htmlFor="outlined-adornment-weight">Lastname</InputLabel>
-                <OutlinedInput
-                  value={lastnameValue}
-                  onChange={(e) => setLastnameValue(e.target.value)}
-                  id="outlined-adornment-weight"
-                  aria-describedby="outlined-weight-helper-text"
-                  inputProps={{
-                    'aria-label': 'weight',
-                  }}
-                />
-              </FormControl>
-              <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
-                <InputLabel htmlFor="outlined-adornment-weight">Job</InputLabel>
-                <OutlinedInput
-                  value={jobValue}
-                  onChange={(e) => setJobValue(e.target.value)}
-                  required={true}
-                  id="outlined-adornment-weight"
-                  aria-describedby="outlined-weight-helper-text"
-                  inputProps={{
-                    'aria-label': 'weight',
-                  }}
-                />
-              </FormControl>
-              <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
-                <InputLabel htmlFor="outlined-adornment-weight">Email</InputLabel>
-                <OutlinedInput
-                  value={emailValue}
-                  onChange={(e) => setEmailValue(e.target.value)}
-                  id="outlined-adornment-weight"
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <Email />
-                    </InputAdornment>
-                  }
-                  aria-describedby="outlined-weight-helper-text"
-                  inputProps={{
-                    'aria-label': 'weight',
-                  }}
-                />
-              </FormControl>
-              <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
-                <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-                <OutlinedInput
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  id="outlined-adornment-password"
-                  type={showPassword ? 'text' : 'password'}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label={showPassword ? 'hide the password' : 'display the password'}
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        onMouseUp={handleMouseUpPassword}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  required={true}
-                  label="Password"
-                />
-              </FormControl>
-              <Button variant="contained" type='submit' sx={{ m: 1, width: '100%' }}>
-                Sing Up
-              </Button>
-            </form>
-          </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              width: '100%',
-              padding: '0 1rem',
-              marginTop: '1rem',
-              boxSizing: 'border-box',
-            }}
-          >
-            <span>
-              You don't have account? <a href="/register">Регистрация</a>
-            </span>
-            <a href="/forgot-password">Forgot password?</a>
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            textAlign: 'center',
-            boxSizing: 'border-box',
-            width: '50%',
-            backgroundImage: "url('../../public/img/background.png')",
-            minHeight: '100vh',
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-          }}
-        />
-    </Box>
+        </FormControl>
+        <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
+          <InputLabel htmlFor="outlined-adornment-weight">Lastname</InputLabel>
+          <OutlinedInput
+            value={lastnameValue}
+            onChange={(e) => setLastnameValue(e.target.value)}
+            id="outlined-adornment-weight"
+            aria-describedby="outlined-weight-helper-text"
+            inputProps={{ 'aria-label': 'weight' }}
+          />
+        </FormControl>
+        <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
+          <InputLabel htmlFor="outlined-adornment-weight">Job</InputLabel>
+          <OutlinedInput
+            value={jobValue}
+            onChange={(e) => setJobValue(e.target.value)}
+            required={true}
+            id="outlined-adornment-weight"
+            aria-describedby="outlined-weight-helper-text"
+            inputProps={{ 'aria-label': 'weight' }}
+          />
+        </FormControl>
+        <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
+          <InputLabel htmlFor="outlined-adornment-weight">Email</InputLabel>
+          <OutlinedInput
+            value={emailValue}
+            onChange={(e) => setEmailValue(e.target.value)}
+            id="outlined-adornment-weight"
+            endAdornment={
+              <InputAdornment position="end">
+                <Email />
+              </InputAdornment>
+            }
+            aria-describedby="outlined-weight-helper-text"
+            inputProps={{ 'aria-label': 'weight' }}
+          />
+        </FormControl>
+        <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
+          <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+          <OutlinedInput
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            id="outlined-adornment-password"
+            type={showPassword ? 'text' : 'password'}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label={showPassword ? 'hide the password' : 'display the password'}
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  onMouseUp={handleMouseUpPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+            required={true}
+            label="Password"
+          />
+        </FormControl>
+        <Button variant="contained" type="submit" sx={{ m: 1, width: '100%' }}>
+          Sign Up
+        </Button>
+      </form>
+    </AuthLayout>
   );
 }

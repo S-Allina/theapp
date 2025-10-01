@@ -1,13 +1,8 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { Box, Paper } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { useGetUsersQuery } from '../services/usersApi';
-import {
-  setUsers,
-  setSelectedUsers,
-  toggleUserSelection,
-  selectAllUsers,
-} from '../slices/usersSlice';
+import { setUsers, setSelectedUsers, toggleUserSelection, selectAllUsers} from '../slices/usersSlice';
 import UsersToolbar from '../Components/UsersToolbar';
 import UsersTable from '../Components/UsersTable';
 
@@ -94,7 +89,7 @@ export default function Users() {
     const lowerCaseValue = value.toLowerCase();
     setFilterValue(lowerCaseValue);
   }, []);
-  
+
   const visibleRows = useMemo(() => {
     return [...filteredRows].sort(getComparator(order, orderBy));
   }, [filteredRows, order, orderBy]);

@@ -1,24 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_BASE_URL } from '../config/api';
 
-interface UserDto {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  emailConfirmed: boolean;
-  job: string;
-  lastActivity: string;
-  status: string;
-}
-
-interface ResponseDto {
-  isSuccess: boolean;
-  result: UserDto[];
-  displayMessage: string | null;
-  errorMessages: string[] | null;
-}
-
 export const usersApi = createApi({
   reducerPath: 'usersApi',
   baseQuery: fetchBaseQuery({
@@ -31,7 +13,7 @@ export const usersApi = createApi({
   tagTypes: ['Users'],
   endpoints: (builder) => ({
     getUsers: builder.query<UserDto[], void>({
-      query: () => '/api/users',
+      query: () => '/users',
       transformResponse: (response: ResponseDto) => {
         if (response.isSuccess && response.result) {
           return response.result;
@@ -42,14 +24,14 @@ export const usersApi = createApi({
     }),
     updateActivity: builder.mutation<void, void>({
       query: () => ({
-        url: '/api/users/activity',
+        url: '/users/activity',
         method: 'POST',
         credentials: 'include',
       }),
     }),
     blockUsers: builder.mutation<ResponseDto, string[]>({
       query: (userIds) => ({
-        url: '/api/users/block',
+        url: '/users/block',
         method: 'PATCH',
         body: userIds,
       }),
@@ -71,7 +53,7 @@ export const usersApi = createApi({
     }),
     unblockUsers: builder.mutation<ResponseDto, string[]>({
       query: (userIds) => ({
-        url: '/api/users/unblock',
+        url: '/users/unblock',
         method: 'PATCH',
         body: userIds,
       }),
@@ -79,7 +61,7 @@ export const usersApi = createApi({
     }),
     deleteUsers: builder.mutation<ResponseDto, string[]>({
       query: (userIds) => ({
-        url: '/api/users',
+        url: '/users',
         method: 'DELETE',
         body: userIds,
         credentials: 'include',
@@ -104,7 +86,7 @@ export const usersApi = createApi({
     }),
     deleteUnverifyUsers: builder.mutation<ResponseDto, void>({
       query: () => ({
-        url: '/api/users/unconfirmedUsers',
+        url: '/users/unconfirmedUsers',
         method: 'DELETE',
         credentials: 'include',
       }),
@@ -121,3 +103,21 @@ export const {
   useUpdateActivityMutation,
   useDeleteUnverifyUsersMutation,
 } = usersApi;
+
+interface UserDto {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  emailConfirmed: boolean;
+  job: string;
+  lastActivity: string;
+  status: string;
+}
+
+interface ResponseDto {
+  isSuccess: boolean;
+  result: UserDto[];
+  displayMessage: string | null;
+  errorMessages: string[] | null;
+}

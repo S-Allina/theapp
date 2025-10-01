@@ -1,10 +1,5 @@
-import React, { useState } from 'react';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputAdornment from '@mui/material/InputAdornment';
-import Tooltip from '@mui/material/Tooltip';
-import IconButton from '@mui/material/IconButton';
+import { useState } from 'react';
+import { Tooltip, IconButton, InputAdornment, OutlinedInput, FormControl } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 
 export const FilterInput = ({ onFilterChange }) => {
@@ -29,7 +24,6 @@ export const FilterInput = ({ onFilterChange }) => {
 
   return (
     <Tooltip title="Filter list" sx={{alignSelf:'stretch'}}>
-        
       <FormControl
         sx={{
           m: 0,
@@ -41,7 +35,6 @@ export const FilterInput = ({ onFilterChange }) => {
         }}
         variant="outlined"
       >
-        
         <OutlinedInput
           sx={{
             m: 0,
