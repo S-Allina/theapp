@@ -23,7 +23,7 @@ export const AuthLayout = ({
             width: '35%',
             height: '7%',
             backgroundSize: 'contain',
-            backgroundImage: "url('https://ibb.co/7d3VpCyQ')",
+            backgroundImage: "url('https://i.ibb.co/cSWt83Tw/logo.png')",
             backgroundRepeat: 'no-repeat',
             m: 0,
           }}
@@ -88,7 +88,7 @@ export const AuthLayout = ({
           textAlign: 'center',
           boxSizing: 'border-box',
           width: '50%',
-          backgroundImage: "url('https://ibb.co/NgQTsdvw')",
+          backgroundImage: "url('https://i.ibb.co/Ps3DNvLB/background.png')",
           minHeight: '100vh',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
