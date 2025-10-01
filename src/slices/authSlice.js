@@ -17,7 +17,7 @@ export const checkAuth = createAsyncThunk('auth/checkAuth', async () => {
   const userId = localStorage.getItem('Id');
   const status = localStorage.getItem('status');
 
-  if (userId && status != 'Blocked') {
+  if (userId && status == 'Activity') {
     return {
       isAuthenticated: true,
       user: {
