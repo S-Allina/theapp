@@ -3,13 +3,13 @@ import react from '@vitejs/plugin-react';
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/',
+  base: 'https://s-allina.github.io/theapp/',
   plugins: [react()],
   https: true,
   server: {
     proxy: {
       '/api': {
-        target: 'https://localhost:7237',
+        target: 'http://theapp.somee.com',
         changeOrigin: true,
         secure: false,
       }
