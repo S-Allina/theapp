@@ -1,11 +1,11 @@
-import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Users from './pages/Users';
 import { Provider } from 'react-redux';
 import { store } from './app/store';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { AuthInitializer } from './Components/AuthInitializer';
-import {PrivateRoute} from './routers/PrivateRoute';
+import { PrivateRoute } from './routers/PrivateRoute';
 import { Header } from './Components/Header';
 import { ActivityProvider } from './Components/ActivityProvider';
 import { ResetPassword } from './pages/ResetPassword';
@@ -24,8 +24,8 @@ const App = () => {
                 element={
                   <>
                     {/* <ActivityProvider> */}
-                      <Header />
-                      <Users />
+                    <Header />
+                    <Users />
                     {/* </ActivityProvider> */}
                   </>
                 }
