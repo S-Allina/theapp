@@ -6,7 +6,11 @@ import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import { Visibility, VisibilityOff, Email } from '@mui/icons-material';
 import { useState } from 'react';
-import styled from 'styled-components';
+import { Alert,Box } from '@mui/material';
+import { useRegisterUserMutation } from '../services/authApi';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { register } from '../slices/authSlice';
 
 export function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -20,19 +24,100 @@ export function Register() {
   const handleMouseUpPassword = (event) => {
     event.preventDefault();
   };
+  const [firstnameValue, setFirstnameValue] = useState('');
+  const [lastnameValue, setLastnameValue] = useState('');
+  const [emailValue, setEmailValue] = useState('');
+  const [jobValue, setJobValue] = useState('');
+  const [password, setPassword] = useState('');
+  const [registerUser] = useRegisterUserMutation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [registerError, setRegisterError] = useState(null);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setRegisterError(null);
+    try {
+      const result = await registerUser({
+        firstname: firstnameValue,
+        lastname: lastnameValue,
+        email: emailValue,
+        job: jobValue,
+        password,
+      }).unwrap();
+      console.log('Login result:', result);
+
+      if (result.isSuccess && result.result && result.result.email != null) {
+        dispatch(register());
+        navigate('/login', { 
+            replace: true,
+            state: { message: "Ваш профиль успешно создан, проверьте свою почту" } 
+        });
+      } else {
+        console.log(result);
+        setRegisterError(result.displayMessage || result.errorMessages);
+      }
+    } catch (err) {
+      if (err?.data?.displayMessage) {
+        setRegisterError(err.data.displayMessage);
+      } else {
+        console.log(err);
+        setRegisterError('Неверный формат данных.');
+      }
+    }
+  };
 
   return (
-    <StyledWrapper>
-      <div className="center">
-        <div className="content-wrapper">
-          <div className="logo"></div>
-          <div className="form-section">
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        width: '100vw',
+        textAlign: 'center',
+      }}
+    >
+        <Box
+          sx={{
+            padding: '5rem',
+            boxSizing: 'border-box',
+            width: '50vw',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Box
+            sx={{
+              width: '35%',
+              height: '7%',
+              backgroundSize: 'contain',
+              backgroundImage: "url('../../public/img/logo.png')",
+              backgroundRepeat: 'no-repeat',
+              margin: 0,
+            }}
+          />
+          <Box
+            sx={{
+              padding: '5rem',
+              width: 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+            }}
+          >
             <h6 className="subtitle">Start your journey</h6>
             <h2 className="title">Sign In to The App</h2>
-            <form className="form">
+            <form className="form" onSubmit={handleSubmit}>
+              {registerError && (
+                <Alert severity="error" sx={{ marginBottom: 2 }}>
+                  {registerError}
+                </Alert>
+              )}
               <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-weight">Firstname</InputLabel>
                 <OutlinedInput
+                  value={firstnameValue}
+                  onChange={(e) => setFirstnameValue(e.target.value)}
                   id="outlined-adornment-weight"
                   aria-describedby="outlined-weight-helper-text"
                   inputProps={{
@@ -43,6 +128,21 @@ export function Register() {
               <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-weight">Lastname</InputLabel>
                 <OutlinedInput
+                  value={lastnameValue}
+                  onChange={(e) => setLastnameValue(e.target.value)}
+                  id="outlined-adornment-weight"
+                  aria-describedby="outlined-weight-helper-text"
+                  inputProps={{
+                    'aria-label': 'weight',
+                  }}
+                />
+              </FormControl>
+              <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-weight">Job</InputLabel>
+                <OutlinedInput
+                  value={jobValue}
+                  onChange={(e) => setJobValue(e.target.value)}
+                  required={true}
                   id="outlined-adornment-weight"
                   aria-describedby="outlined-weight-helper-text"
                   inputProps={{
@@ -53,6 +153,8 @@ export function Register() {
               <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-weight">Email</InputLabel>
                 <OutlinedInput
+                  value={emailValue}
+                  onChange={(e) => setEmailValue(e.target.value)}
                   id="outlined-adornment-weight"
                   endAdornment={
                     <InputAdornment position="end">
@@ -68,6 +170,8 @@ export function Register() {
               <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                 <OutlinedInput
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   id="outlined-adornment-password"
                   type={showPassword ? 'text' : 'password'}
                   endAdornment={
@@ -83,137 +187,46 @@ export function Register() {
                       </IconButton>
                     </InputAdornment>
                   }
+                  required={true}
                   label="Password"
                 />
               </FormControl>
-              <Button variant="contained" sx={{ m: 1, width: '100%' }}>
-                Contained
+              <Button variant="contained" type='submit' sx={{ m: 1, width: '100%' }}>
+                Sing Up
               </Button>
             </form>
-          </div>
-        </div>
-        <div class="my-container"></div>
-      </div>
-    </StyledWrapper>
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              width: '100%',
+              padding: '0 1rem',
+              marginTop: '1rem',
+              boxSizing: 'border-box',
+            }}
+          >
+            <span>
+              You don't have account? <a href="/register">Регистрация</a>
+            </span>
+            <a href="/forgot-password">Forgot password?</a>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center',
+            boxSizing: 'border-box',
+            width: '50%',
+            backgroundImage: "url('../../public/img/background.png')",
+            minHeight: '100vh',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+          }}
+        />
+    </Box>
   );
 }
-
-const StyledWrapper = styled.div`
-  .center {
-    display: flex;
-    justify-content: center;
-    width: 100vw;
-    text-align: center;
-  }
-  .my-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    box-sizing: border-box;
-    width: 50%;
-    background-image: url('/img/background.png');
-    min-height: 100vh;
-    background-size: cover;
-    background-repeat: no-repeat;
-  }
-
-  .content-wrapper {
-    padding: 3rem;
-    box-sizing: border-box;
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .logo {
-    width: 35%;
-    height: 7%;
-    background-image: url('/img/logo.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    margin: 0;
-  }
-
-  .form-section {
-    padding: 3rem;
-    width: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-  }
-
-  .subtitle {
-    color: #6c757d;
-    font-weight: 300;
-    text-align: left;
-    margin: 0;
-    font-size: 1rem;
-  }
-
-  .title {
-    color: #000;
-    text-align: left;
-    font-size: 1.5rem;
-    margin: 0 0 1rem 0;
-  }
-
-  .form {
-    margin-top: 3rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /* Дополнительные стили */
-  .field-icon {
-    float: right;
-    margin-right: 10px;
-    margin-top: -55px;
-    position: relative;
-    z-index: 2;
-  }
-
-  .fit-content {
-    width: fit-content;
-  }
-
-  a:hover {
-    cursor: pointer;
-  }
-
-  .my-control-label {
-    display: flex;
-    align-items: center;
-    position: relative;
-    font-size: 0.8em;
-    top: -45px;
-    width: 100%;
-    left: 4%;
-    color: #969696;
-  }
-
-  .my-form-control {
-    font-size: 1em;
-    padding: 1rem 1.3rem 0.3rem 1rem;
-    color: black;
-  }
-
-  .container1 {
-    padding-top: 50px;
-    margin: auto;
-  }
-
-  .p-6 {
-    padding: 3% 5% !important;
-  }
-
-  .p-20 {
-    padding: 15% 20% 10%;
-  }
-
-  .fs-0 {
-    font-size: 12px;
-  }
-`;
