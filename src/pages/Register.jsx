@@ -49,7 +49,6 @@ export function Register() {
         job: jobValue,
         password,
       }).unwrap();
-      console.log(result);
       if (result && result.isSuccess && result.result && result.result.email != null) {
         dispatch(register());
         navigate('/login', {

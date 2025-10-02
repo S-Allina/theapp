@@ -26,7 +26,7 @@ export const useUserActivity = (interval = 30000) => {
         await updateActivity().unwrap();
         lastUpdateRef.current = now;
       } catch (error) {
-        console.warn('Failed to update activity:', error);
+        console.log('Failed to update activity:', error);
       }
     }
   }, [updateActivity, shouldTrackActivity, interval]);

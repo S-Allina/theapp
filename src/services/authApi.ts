@@ -20,7 +20,6 @@ export const authApi = createApi({
         credentials: 'include',
       }),
       transformResponse: (response: ApiResponse<LoginResponse>) => {
-        console.log(response);
         if (response.isSuccess && response.result && response.result.Status != 'Blocked') {
           localStorage.setItem('Id', response.result.Id);
           localStorage.setItem(
@@ -74,7 +73,7 @@ export const authApi = createApi({
           localStorage.removeItem('status');
           dispatch(authApi.util.resetApiState());
         } catch (error) {
-          console.error('Logout error:', error);
+          console.log('Logout error:', error);
         }
       },
     }),

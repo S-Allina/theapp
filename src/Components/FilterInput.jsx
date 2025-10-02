@@ -9,8 +9,6 @@ export const FilterInput = ({ onFilterChange }) => {
     const value = event.target.value;
     setFilterValue(value); 
     if (onFilterChange) {
-            console.log(value)
-
       onFilterChange(value); 
     }
   };

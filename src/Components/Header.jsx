@@ -14,7 +14,6 @@ export function Header() {
     try {
       await logoutUser().unwrap();
     } catch (error) {
-      console.error('Logout API error:', error);
     } finally {
       dispatch(logout());
       navigate('/login');

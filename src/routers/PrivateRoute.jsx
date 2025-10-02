@@ -15,10 +15,7 @@ export const PrivateRoute = () => {
     !location.pathname.includes('/register') &&
     !location.pathname.includes('/login')
   ) {
-    console.log('if');
-    console.log(location.pathname);
     return <Navigate to="/login" />;
   }
-  console.log(location.pathname);
   return <Outlet />;
 };

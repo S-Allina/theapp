@@ -13,18 +13,19 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithAuth = async (args: any, api: any, extraOptions: any) => {
   try {
     const result = await baseQuery(args, api, extraOptions);
-    console.log(result.error);
     if (result.error && result.error?.originalStatus === 403) {
-      console.log('User blocked, redirecting to login...');
-      console.log(window.location.hash);
       window.location.href = '#/theapp/login?error=Your account has been blocked';
       return { data: undefined, error: undefined };
     }
-
-    console.log('Request successful');
+    if (
+      result.error?.originalStatus === 500 &&
+      result.ErrorMessages[0].includes('User not found')
+    ) {
+      window.location.href = '#/theapp/login?error=Your account has been delete';
+      return { data: undefined, error: undefined };
+    }
     return result;
   } catch (error) {
-    console.log('Catch block - unexpected error:', error);
     window.location.hash = '#/theapp/login?error=Unexpected error occurred';
     return { data: undefined, error: undefined };
   }
@@ -68,9 +69,7 @@ export const usersApi = createApi({
               }),
             );
           }
-        } catch (error) {
-          console.error('Failed to update cache after blocking users:', error);
-        }
+        } catch (error) {}
       },
     }),
     unblockUsers: builder.mutation<ResponseDto, string[]>({
@@ -98,9 +97,7 @@ export const usersApi = createApi({
               }),
             );
           }
-        } catch (error) {
-          console.error('Failed to delete users:', error);
-        }
+        } catch (error) {}
       },
     }),
     deleteUnverifyUsers: builder.mutation<ResponseDto, void>({

@@ -13,7 +13,7 @@ const UsersToolbar = ({ selectedUsers, onSelectionClear, onFilterChange }) => {
       await blockUsers(userIds).unwrap();
       onSelectionClear();
     } catch (error) {
-      console.error('Failed to block users:', error);
+      console.log('Failed to block users:', error);
       throw error;
     }
   };
@@ -23,18 +23,17 @@ const UsersToolbar = ({ selectedUsers, onSelectionClear, onFilterChange }) => {
         await unblockUsers(userIds).unwrap();
         onSelectionClear();
       } catch (error) {
-        console.error('Failed to unblock users:', error);
+        console.log('Failed to unblock users:', error);
         throw error;
       }
     };
   
     const handleDeleteUsers = async (userIds) => {
       try {
-        console.log(userIds)
        await deleteUsers(userIds).unwrap();
        onSelectionClear();
       } catch (error) {
-        console.error('Failed to delete users:', error);
+        console.log('Failed to delete users:', error);
         throw error;
       }
     };
@@ -43,7 +42,7 @@ const UsersToolbar = ({ selectedUsers, onSelectionClear, onFilterChange }) => {
       try {
        await deleteUnverifyUsers().unwrap();
       } catch (error) {
-        console.error('Failed to delete users:', error);
+        console.log('Failed to delete users:', error);
         throw error;
       }
     };
