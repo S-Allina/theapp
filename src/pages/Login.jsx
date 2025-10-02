@@ -87,7 +87,7 @@ export function Login() {
       links={
         <>
           <span>
-            You don't have account? <Link to="/register">Регистрация</Link>
+            You don't have account? <Link to="/register">Sign Up</Link>
           </span>
           <Link to="/reset-password">Forgot password?</Link>
         </>
