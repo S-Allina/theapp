@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { Email, Visibility, VisibilityOff } from '@mui/icons-material';
 import { useRegisterUserMutation } from '../services/authApi';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 import { register } from '../slices/authSlice';
 import { AuthLayout } from '../Layout/AuthLayout';
 
@@ -77,7 +77,7 @@ export function Register() {
       subtitle="Start your journey"
       links={
         <span>
-          Already have an account? <a href="/login">Sign In</a>
+          Already have an account? <Link href="/login">Sign In</Link>
         </span>
       }
     >

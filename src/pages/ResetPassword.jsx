@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForgotPasswordMutation, useResetPasswordMutation } from '../services/authApi';
 import { useSelector } from 'react-redux';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate,Link } from 'react-router-dom';
 import { Email, Visibility, VisibilityOff } from '@mui/icons-material';
 import {AuthLayout} from '../Layout/AuthLayout'
 import {
@@ -104,7 +104,7 @@ export function ResetPassword() {
       subtitle={ (step === 1 ? 'Enter your email to reset password' : 'Enter your new password')}
       links={
         <span>
-          Remember your password? <a href="/login">Sign In</a>
+          Remember your password? <Link href="/login">Sign In</Link>
         </span>
       }
     >

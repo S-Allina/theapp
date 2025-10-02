@@ -12,7 +12,7 @@ import { useState, useEffect } from 'react';
 import { useLoginUserMutation } from '../services/authApi';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../slices/authSlice';
-import { useLocation, useSearchParams, useNavigate } from 'react-router-dom';
+import { useLocation, Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { AuthLayout } from '../Layout/AuthLayout';
 
 export function Login() {
@@ -86,7 +86,7 @@ export function Login() {
       subtitle="Start your journey"
       links={
         <span>
-          You don't have account? <a href="/register">Регистрация</a>
+          You don't have account? <Link href="/register">Регистрация</Link>
         </span>
       }
     >
