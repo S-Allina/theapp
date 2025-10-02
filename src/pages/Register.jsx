@@ -49,8 +49,8 @@ export function Register() {
         job: jobValue,
         password,
       }).unwrap();
-
-      if (result.isSuccess && result.result && result.result.email != null) {
+      console.log(result);
+      if (result && result.isSuccess && result.result && result.result.email != null) {
         dispatch(register());
         navigate('/login', {
           replace: true,
@@ -61,7 +61,7 @@ export function Register() {
       }
     } catch (err) {
       if (err?.data?.displayMessage) {
-        setRegisterError(err.data.displayMessage );
+        setRegisterError(err.data.displayMessage);
       } else {
         setRegisterError(err);
       }
