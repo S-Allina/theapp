@@ -18,9 +18,9 @@ export const AuthLayout = ({
     >
       <Box
         sx={{
-          p: { sm: '1rem', md: '5rem' },
+          p: { sm: '1rem',xs: '1rem', md: '5rem' },
           boxSizing: 'border-box',
-          width: { sm: '100vw', md: '50vw' },
+          width: { sm: '100vw', xs:'100vw', md: '50vw' },
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
@@ -38,7 +38,7 @@ export const AuthLayout = ({
         />
         <Box
           sx={{
-          p: { sm: '1rem', md: '5rem' },
+          p: { sm: '1rem',xs: '1rem', md: '5rem' },
             width: 'auto',
             display: 'flex',
             flexDirection: 'column',
@@ -90,7 +90,7 @@ export const AuthLayout = ({
 
       <Box
         sx={{
-          display: { sm: 'none', md: 'flex' },
+          display: { sm: 'none', xs:'none', md: 'flex' },
           justifyContent: 'center',
           alignItems: 'center',
           textAlign: 'center',
