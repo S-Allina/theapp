@@ -89,7 +89,7 @@ export function Login() {
           <span>
             You don't have account? <Link to="/register">Регистрация</Link>
           </span>
-          <Link to="/forgot-password">Forgot password?</Link>
+          <Link to="/reset-password">Forgot password?</Link>
         </>
       }
     >
