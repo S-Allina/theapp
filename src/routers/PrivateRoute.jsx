@@ -8,6 +8,7 @@ export const PrivateRoute = () => {
     return <div>Loading...</div>;
   }
 
+  // if(location.pathname.includes('/theapp/reset-password')) return <Navigate to="/replace-password" replace />;
   if (
     !isAuthenticated &&
     !location.pathname.includes('/theapp/reset-password') &&
@@ -15,5 +16,7 @@ export const PrivateRoute = () => {
   ) {
     return <Navigate to="/login" replace />;
   }
+
+
   return <Outlet />;
 };

@@ -16,7 +16,7 @@ const App = () => {
         <Router basename="/theapp">
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/reset-password/:token/:email" element={<ResetPassword />} />
             <Route path="/register" element={<Register />} />
             <Route element={<PrivateRoute />}>
               <Route
@@ -24,8 +24,8 @@ const App = () => {
                 element={
                   <>
                     <ActivityProvider>
-                    <Header />
-                    <Users />
+                      <Header />
+                      <Users />
                     </ActivityProvider>
                   </>
                 }
