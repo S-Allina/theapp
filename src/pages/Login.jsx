@@ -1,11 +1,19 @@
-import { FormControl, Alert, OutlinedInput, InputAdornment, InputLabel,IconButton, Button, } from '@mui/material';
+import {
+  FormControl,
+  Alert,
+  OutlinedInput,
+  InputAdornment,
+  InputLabel,
+  IconButton,
+  Button,
+} from '@mui/material';
 import { Email, Visibility, VisibilityOff } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
 import { useLoginUserMutation } from '../services/authApi';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../slices/authSlice';
 import { useLocation, useSearchParams, useNavigate } from 'react-router-dom';
-import {AuthLayout} from '../Layout/AuthLayout'
+import { AuthLayout } from '../Layout/AuthLayout';
 
 export function Login() {
   const [searchParams, setSearchParams] = useSearchParams();
