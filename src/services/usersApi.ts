@@ -17,10 +17,7 @@ const baseQueryWithAuth = async (args: any, api: any, extraOptions: any) => {
       window.location.href = '#/theapp/login?error=Your account has been blocked';
       return { data: undefined, error: undefined };
     }
-    if (
-      result.error?.originalStatus === 500 &&
-      result.ErrorMessages[0].includes('User not found')
-    ) {
+    if (result?.Status === 500 && result.data.ErrorMessages[0].includes('User not found')) {
       window.location.href = '#/theapp/login?error=Your account has been delete';
       return { data: undefined, error: undefined };
     }
