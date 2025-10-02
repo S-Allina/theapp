@@ -12,12 +12,12 @@ import { ResetPassword } from './pages/ResetPassword';
 const App = () => {
   return (
     <Provider store={store}>
-      <AuthInitializer>
-        <Router>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/register" element={<Register />} />
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/register" element={<Register />} />
+          <AuthInitializer>
             <Route element={<PrivateRoute />}>
               <Route
                 path="/"
@@ -32,9 +32,9 @@ const App = () => {
               />
             </Route>
             <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </Router>
-      </AuthInitializer>
+          </AuthInitializer>
+        </Routes>
+      </Router>
     </Provider>
   );
 };
