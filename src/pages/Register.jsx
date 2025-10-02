@@ -57,7 +57,7 @@ export function Register() {
           state: { message: 'Your profile has been successfully created, check your email.' },
         });
       } else {
-        setRegisterError(result.message || result.errorMessages);
+        setRegisterError(result.data.message || result.errorMessages);
       }
     } catch (err) {
       if (err?.data?.displayMessage) {
