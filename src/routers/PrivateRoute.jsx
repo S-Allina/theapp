@@ -1,22 +1,22 @@
 import { Outlet, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 export const PrivateRoute = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const isLoading = useSelector((state) => state.auth.isLoading);
-
+const location = useLocation();
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  // if(location.pathname.includes('/theapp/reset-password')) return <Navigate to="/replace-password" replace />;
-  if (
+    if (
     !isAuthenticated &&
-    !location.pathname.includes('/theapp/reset-password') &&
+    !location.pathname.includes('/reset-password') &&
     !location.pathname.startsWith('/register')
   ) {
+    console.log(location.pathname)
     return <Navigate to="/login" replace />;
   }
-
-
+console.log(location.pathname)
   return <Outlet />;
 };
