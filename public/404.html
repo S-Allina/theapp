@@ -1,20 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>Redirecting...</title>
-    <script type="text/javascript">
-        var pathSegments = window.location.pathname.split('/');
-        var appBase = '/theapp/';
-
-        if (pathSegments[1] === 'theapp') {
-            sessionStorage.redirect = window.location.pathname + window.location.search;
-        }
-        window.location.replace(appBase);
-    </script>
+  <meta charset="utf-8">
+  <title>Redirecting...</title>
+  <script>
+    sessionStorage.redirect = location.pathname;
+    console.log(location.pathname)
+  </script>
+  <meta http-equiv="refresh" content="0;URL='/theapp/'"></meta>
 </head>
 <body>
-    <h1>Redirecting...</h1>
-    <a href="/theapp/">Click here if you are not redirected.</a>
 </body>
 </html>

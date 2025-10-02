@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useForgotPasswordMutation, useResetPasswordMutation } from '../services/authApi';
 import { useSelector } from 'react-redux';
-import { useSearchParams, useNavigate,Link } from 'react-router-dom';
+import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { Email, Visibility, VisibilityOff } from '@mui/icons-material';
-import {AuthLayout} from '../Layout/AuthLayout'
+import { AuthLayout } from '../Layout/AuthLayout';
 import {
   Alert,
   FormControl,
@@ -101,10 +101,10 @@ export function ResetPassword() {
   return (
     <AuthLayout
       title="Reset password"
-      subtitle={ (step === 1 ? 'Enter your email to reset password' : 'Enter your new password')}
+      subtitle={step === 1 ? 'Enter your email to reset password' : 'Enter your new password'}
       links={
         <span>
-          Remember your password? <Link href="/login">Sign In</Link>
+          Remember your password? <Link to="/login">Sign In</Link>
         </span>
       }
     >

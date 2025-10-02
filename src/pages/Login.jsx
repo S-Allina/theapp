@@ -86,7 +86,7 @@ export function Login() {
       subtitle="Start your journey"
       links={
         <span>
-          You don't have account? <Link href="/theapp/register">Регистрация</Link>
+          You don't have account? <Link to="/register">Регистрация</Link>
         </span>
       }
     >

@@ -77,7 +77,7 @@ export function Register() {
       subtitle="Start your journey"
       links={
         <span>
-          Already have an account? <Link href="/login">Sign In</Link>
+          Already have an account? <Link to="/login">Sign In</Link>
         </span>
       }
     >
