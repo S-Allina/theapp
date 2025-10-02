@@ -18,10 +18,8 @@ const UsersToolbar = ({ selectedUsers, onSelectionClear, onFilterChange }) => {
       await blockUsers(userIds).unwrap();
       onSelectionClear();
     } catch (error) {
-      console.log('Failed to block users:', error);
-       console.log(error.data.ErrorMessages[0])
-      if (error.status == 500 && error.data.ErrorMessages[0]=='Error. User not found')
-        console.log(error.data.ErrorMessages[0])
+      console.log('Failed to block users:', error.status);
+      if (error.status == 500)
         navigate('/login?error=Your account is delete');
     }
   };
@@ -31,10 +29,8 @@ const UsersToolbar = ({ selectedUsers, onSelectionClear, onFilterChange }) => {
       await unblockUsers(userIds).unwrap();
       onSelectionClear();
     } catch (error) {
-      console.log('Failed to unblock users:', error);
-       console.log(error.data.ErrorMessages[0])
-      if (error.status == 500 && error.data.ErrorMessages[0]=='Error. User not found')
-        console.log(error.data.ErrorMessages[0])
+      console.log('Failed to unblock users:', error.status);
+      if (error.status == 500)
         navigate('/login?error=Your account is delete');
     }
   };
@@ -45,9 +41,7 @@ const UsersToolbar = ({ selectedUsers, onSelectionClear, onFilterChange }) => {
       onSelectionClear();
     } catch (error) {
       console.log('Failed to delete users:', error);
-       console.log(error.data.ErrorMessages[0])
-      if (error.status == 500 && error.data.ErrorMessages[0]=='Error. User not found')
-        console.log(error.data.ErrorMessages[0])
+       if (error.status == 500)
         navigate('/login?error=Your account is delete');
     }
   };
@@ -57,9 +51,7 @@ const UsersToolbar = ({ selectedUsers, onSelectionClear, onFilterChange }) => {
       await deleteUnverifyUsers().unwrap();
     } catch (error) {
       console.log('Failed to delete users:', error);
-              console.log(error.data.ErrorMessages[0])
-      if (error.status == 500 && error.data.ErrorMessages[0]=='Error. User not found')
-        console.log(error.data.ErrorMessages[0])
+              if (error.status == 500)
         navigate('/login?error=Your account is delete');
     }
   };
