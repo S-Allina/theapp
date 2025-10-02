@@ -49,7 +49,6 @@ export function Register() {
         job: jobValue,
         password,
       }).unwrap();
-      console.log('Login result:', result);
 
       if (result.isSuccess && result.result && result.result.email != null) {
         dispatch(register());
@@ -58,15 +57,13 @@ export function Register() {
           state: { message: 'Your profile has been successfully created, check your email.' },
         });
       } else {
-        console.log(result);
         setRegisterError(result.message || result.errorMessages);
       }
     } catch (err) {
       if (err?.data?.displayMessage) {
-        setRegisterError(err.data.displayMessage);
+        setRegisterError(err.data.displayMessage );
       } else {
-        console.log(err);
-        setRegisterError('Invalid data format.');
+        setRegisterError(err);
       }
     }
   };
