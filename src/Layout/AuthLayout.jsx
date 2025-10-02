@@ -73,7 +73,8 @@ export const AuthLayout = ({
         >
           {links || (
             <span>
-              You don't have account? <Link to="/register">Регистрация</Link>
+              You don't have account? <Link to="/register">Регистрация</Link> or{' '}
+              <Link to="/forgot-password">Forgot password?</Link>
             </span>
           )}
           <Link to="/forgot-password">Forgot password?</Link>
