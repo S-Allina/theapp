@@ -10,7 +10,7 @@ export const AuthLayout = ({
     <Box
       sx={{
         display: 'flex',
-        flexWrap: 'wrap',
+        // flexWrap: 'wrap',
         justifyContent: 'center',
         width: '100vw',
         textAlign: 'center',
