@@ -64,10 +64,11 @@ export function Login() {
         dispatch(login(result.result));
         navigate('/', { replace: true });
       } else {
+        console.log('res ' + result);
         setLoginError(result?.errorMessages[0] || result.displayMessage);
       }
     } catch (err) {
-      if (err?.data?.displayMessage || err?.errorMessages?.length>0) {
+      if (err?.data?.displayMessage || err?.errorMessages) {
         setLoginError(err.data.displayMessage || err.errorMessages[0]);
       } else {
         console.log(err);
