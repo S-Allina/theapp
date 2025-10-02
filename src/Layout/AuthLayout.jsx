@@ -7,12 +7,20 @@ export const AuthLayout = ({
   links = null,
 }) => {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100vw', textAlign: 'center' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        width: '100vw',
+        textAlign: 'center',
+      }}
+    >
       <Box
         sx={{
-          p: '5rem',
+          p: { xs: '2rem', md: '5rem' },
           boxSizing: 'border-box',
-          width: '50vw',
+          width: { xs: '100vw', md: '50vw' },
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
@@ -82,7 +90,7 @@ export const AuthLayout = ({
 
       <Box
         sx={{
-          display: 'flex',
+          display: { xs: 'none', md: 'flex' },
           justifyContent: 'center',
           alignItems: 'center',
           textAlign: 'center',

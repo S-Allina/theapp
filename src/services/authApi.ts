@@ -41,7 +41,6 @@ export const authApi = createApi({
         body: userData,
       }),
       transformResponse: (response: ApiResponse<RegisterResponse>) => {
-        console.log('Register Response:', response);
         return response;
       },
     }),

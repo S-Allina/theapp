@@ -37,7 +37,6 @@ export const usersApi = createApi({
       }),
       onQueryStarted: async (userIds, { dispatch, queryFulfilled }) => {
         try {
-          console.log(userIds);
           const { data } = await queryFulfilled;
           if (data.isSuccess && data.result) {
             dispatch(
@@ -68,10 +67,7 @@ export const usersApi = createApi({
       }),
       onQueryStarted: async (userIds, { dispatch, queryFulfilled }) => {
         try {
-          console.log(userIds);
           const { data } = await queryFulfilled;
-          console.log(data);
-
           if (data.isSuccess && data.result) {
             dispatch(
               usersApi.util.updateQueryData('getUsers', undefined, (draft) => {

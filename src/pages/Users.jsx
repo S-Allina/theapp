@@ -63,7 +63,6 @@ export default function Users() {
   }, [dispatch]);
 
   const rows = useMemo(() => {
-    console.log(users);
     return users.map((user) => ({
       id: user.id,
       Name: user.firstName + ' ' + user.lastName,

@@ -21,6 +21,7 @@ const UsersToolbar = ({ selectedUsers, onSelectionClear, onFilterChange }) => {
     const handleUnblockUsers = async (userIds) => {
       try {
         await unblockUsers(userIds).unwrap();
+        onSelectionClear();
       } catch (error) {
         console.error('Failed to unblock users:', error);
         throw error;
@@ -31,6 +32,7 @@ const UsersToolbar = ({ selectedUsers, onSelectionClear, onFilterChange }) => {
       try {
         console.log(userIds)
        await deleteUsers(userIds).unwrap();
+       onSelectionClear();
       } catch (error) {
         console.error('Failed to delete users:', error);
         throw error;
