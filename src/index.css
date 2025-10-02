@@ -12,7 +12,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+span {
+  color: rgb(88, 88, 88);
+}
 a {
   font-weight: 500;
   color: #646cff;
