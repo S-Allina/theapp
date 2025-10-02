@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { Email, Visibility, VisibilityOff } from '@mui/icons-material';
 import { useRegisterUserMutation } from '../services/authApi';
 import { useDispatch } from 'react-redux';
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { register } from '../slices/authSlice';
 import { AuthLayout } from '../Layout/AuthLayout';
 
@@ -59,7 +59,7 @@ export function Register() {
         });
       } else {
         console.log(result);
-        setRegisterError(result.displayMessage || result.errorMessages);
+        setRegisterError(result.message || result.errorMessages);
       }
     } catch (err) {
       if (err?.data?.displayMessage) {
