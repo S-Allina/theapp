@@ -23,10 +23,10 @@ const App = () => {
                 path="/"
                 element={
                   <>
-                    {/* <ActivityProvider> */}
+                    <ActivityProvider>
                     <Header />
                     <Users />
-                    {/* </ActivityProvider> */}
+                    </ActivityProvider>
                   </>
                 }
               />
