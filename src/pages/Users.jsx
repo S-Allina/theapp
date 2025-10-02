@@ -2,7 +2,12 @@ import { useEffect, useState, useMemo, useCallback } from 'react';
 import { Box, Paper } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { useGetUsersQuery } from '../services/usersApi';
-import { setUsers, setSelectedUsers, toggleUserSelection, selectAllUsers} from '../slices/usersSlice';
+import {
+  setUsers,
+  setSelectedUsers,
+  toggleUserSelection,
+  selectAllUsers,
+} from '../slices/usersSlice';
 import UsersToolbar from '../Components/UsersToolbar';
 import UsersTable from '../Components/UsersTable';
 
@@ -23,7 +28,6 @@ function getComparator(order, orderBy) {
 }
 export default function Users() {
   const status = useSelector((state) => state.auth.user.status);
-  const isConfirmEmail = useSelector((state) => state.auth.user.emailConfirmed);
   const selectedUsers = useSelector((state) => state.users.selectedUsers);
   const [filterValue, setFilterValue] = useState('');
   const [order, setOrder] = useState('asc');
@@ -103,7 +107,7 @@ export default function Users() {
     <div style={{ width: '95vw' }}>
       <Box sx={{ width: '80vw', m: 'auto' }}>
         <Paper sx={{ mb: 2 }}>
-          {status === 'Activity' && isConfirmEmail && (
+          {status !== 'Blocked' && (
             <UsersToolbar
               selectedUsers={selectedUsers}
               onSelectionClear={handleSelectionClear}

@@ -1,21 +1,44 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_BASE_URL } from '../config/api';
+import { logout } from '../slices/authSlice';
+
+const baseQuery = fetchBaseQuery({
+  baseUrl: API_BASE_URL,
+  prepareHeaders: (headers) => {
+    return headers;
+  },
+  credentials: 'include',
+});
+
+const baseQueryWithAuth = async (args: any, api: any, extraOptions: any) => {
+  try {
+    const result = await baseQuery(args, api, extraOptions);
+    console.log(result.error);
+    if (result.error && result.error?.originalStatus === 403) {
+      console.log('User blocked, redirecting to login...');
+      console.log(window.location.hash);
+      window.location.href = '#/theapp/login?error=Your account has been blocked';
+      return { data: undefined, error: undefined };
+    }
+
+    console.log('Request successful');
+    return result;
+  } catch (error) {
+    console.log('Catch block - unexpected error:', error);
+    window.location.hash = '#/theapp/login?error=Unexpected error occurred';
+    return { data: undefined, error: undefined };
+  }
+};
 
 export const usersApi = createApi({
   reducerPath: 'usersApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: API_BASE_URL,
-    prepareHeaders: (headers) => {
-      return headers;
-    },
-    credentials: 'include',
-  }),
+  baseQuery: baseQueryWithAuth,
   tagTypes: ['Users'],
   endpoints: (builder) => ({
     getUsers: builder.query<UserDto[], void>({
       query: () => '/users',
       transformResponse: (response: ResponseDto) => {
-        if (response.isSuccess && response.result) {
+        if (response?.isSuccess && response?.result) {
           return response.result;
         }
         throw new Error(response.errorMessages?.join('.') || 'Failed to fetch users');

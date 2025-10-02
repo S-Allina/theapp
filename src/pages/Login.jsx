@@ -18,6 +18,8 @@ import { AuthLayout } from '../Layout/AuthLayout';
 export function Login() {
   const [searchParams, setSearchParams] = useSearchParams();
   const message = searchParams.get('message');
+  const errorFromPath = searchParams.get('error');
+
   const [showPassword, setShowPassword] = useState(false);
   const [loginValue, setloginValue] = useState('');
   const [password, setPassword] = useState('');
@@ -103,9 +105,9 @@ export function Login() {
         }}
         onSubmit={handleSubmit}
       >
-        {loginError && (
+        {(loginError || errorFromPath) && (
           <Alert severity="error" sx={{ marginBottom: 2 }}>
-            {loginError}
+            {loginError || errorFromPath}
           </Alert>
         )}
         {loginMessage && (

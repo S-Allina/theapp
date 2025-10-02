@@ -4,19 +4,21 @@ import { useLocation } from 'react-router-dom';
 export const PrivateRoute = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const isLoading = useSelector((state) => state.auth.isLoading);
-const location = useLocation();
+  const location = useLocation();
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-    if (
+  if (
     !isAuthenticated &&
     !location.pathname.includes('/reset-password') &&
-    !location.pathname.startsWith('/register')
+    !location.pathname.includes('/register') &&
+    !location.pathname.includes('/login')
   ) {
-    console.log(location.pathname)
-    return <Navigate to="/login" replace />;
+    console.log('if');
+    console.log(location.pathname);
+    return <Navigate to="/login" />;
   }
-console.log(location.pathname)
+  console.log(location.pathname);
   return <Outlet />;
 };
