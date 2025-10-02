@@ -85,9 +85,12 @@ export function Login() {
       title="Sign In to The App"
       subtitle="Start your journey"
       links={
-        <span>
-          You don't have account? <Link to="/register">Регистрация</Link>
-        </span>
+        <>
+          <span>
+            You don't have account? <Link to="/register">Регистрация</Link>
+          </span>
+          <Link to="/forgot-password">Forgot password?</Link>
+        </>
       }
     >
       <form

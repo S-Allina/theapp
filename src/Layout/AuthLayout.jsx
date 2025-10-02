@@ -77,7 +77,6 @@ export const AuthLayout = ({
               <Link to="/forgot-password">Forgot password?</Link>
             </span>
           )}
-          <Link to="/forgot-password">Forgot password?</Link>
         </Box>
       </Box>
 
