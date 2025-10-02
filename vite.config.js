@@ -12,7 +12,7 @@ export default defineConfig({
         target: 'https://theapp.somee.com',
         changeOrigin: true,
         secure: false,
-      }
-    }
-  }
+      },
+    },
+  },
 });
