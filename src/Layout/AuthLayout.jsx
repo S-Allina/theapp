@@ -38,7 +38,7 @@ export const AuthLayout = ({
         />
         <Box
           sx={{
-            p: '5rem',
+          p: { sm: '1rem', md: '5rem' },
             width: 'auto',
             display: 'flex',
             flexDirection: 'column',

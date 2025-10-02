@@ -67,11 +67,11 @@ export function Login() {
         setLoginError(result.errorMessages[0] || result.displayMessage);
       }
     } catch (err) {
-      if (err?.data?.displayMessage) {
-        setLoginError(err.data.displayMessage);
+      if (err?.data?.displayMessage || err?.data?.errorMessages[0]) {
+        setLoginError(err.data.displayMessage || err.data.errorMessages[0]);
       } else {
         console.log(err);
-        setLoginError('Неверный логин или пароль.');
+        setLoginError('Incorrect login or password.');
       }
     }
   };
