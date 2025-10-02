@@ -13,7 +13,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <AuthInitializer>
-        <Router>
+        <Router basename="/theapp">
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/reset-password" element={<ResetPassword />} />
