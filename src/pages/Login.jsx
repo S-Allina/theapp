@@ -64,7 +64,7 @@ export function Login() {
         dispatch(login(result.result));
         navigate('/', { replace: true });
       } else {
-        setLoginError(result.displayMessage || result.errorMessages);
+        setLoginError(result.errorMessages[0] || result.displayMessage);
       }
     } catch (err) {
       if (err?.data?.displayMessage) {
