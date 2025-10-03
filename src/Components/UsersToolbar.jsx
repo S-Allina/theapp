@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { EnhancedTableToolbar } from '../Components/EnhancedTableToolbar';
 import {
   useBlockUsersMutation,
@@ -7,65 +7,64 @@ import {
   useDeleteUnverifyUsersMutation,
 } from '../services/usersApi';
 import { useNavigate } from 'react-router-dom';
+
 const UsersToolbar = ({ selectedUsers, onSelectionClear, onFilterChange }) => {
   const [blockUsers] = useBlockUsersMutation();
   const [unblockUsers] = useUnblockUsersMutation();
   const [deleteUsers] = useDeleteUsersMutation();
   const [deleteUnverifyUsers] = useDeleteUnverifyUsersMutation();
+  const [alertError, setAlertError] = useState('');
   const navigate = useNavigate();
-  const handleBlockUsers = async (userIds) => {
+
+  const executeUserOperation = async (operation, onSuccess) => {
     try {
-      await blockUsers(userIds).unwrap();
-      onSelectionClear();
+      await operation();
+      if (onSuccess) onSuccess();
     } catch (error) {
-      console.log('Failed to block users:', error.status);
-      if (error.status == 500)
+      if (error.status === 500 && error.data?.ErrorMessages?.includes('Error. User not found')) {
         navigate('/login?error=Your account is delete');
+      } else {
+        const errorMessage =
+          error.data?.DisplayMessage ||
+          error.data?.ErrorMessages?.join(', ') ||
+          'An error occurred';
+        setAlertError(errorMessage);
+      }
     }
   };
 
+  const handleBlockUsers = async (userIds) => {
+    await executeUserOperation(() => blockUsers(userIds).unwrap(), onSelectionClear);
+  };
   const handleUnblockUsers = async (userIds) => {
-    try {
-      await unblockUsers(userIds).unwrap();
-      onSelectionClear();
-    } catch (error) {
-      console.log('Failed to unblock users:', error.status);
-      if (error.status == 500)
-        navigate('/login?error=Your account is delete');
-    }
+    await executeUserOperation(() => unblockUsers(userIds).unwrap(), onSelectionClear);
   };
 
   const handleDeleteUsers = async (userIds) => {
-    try {
-      await deleteUsers(userIds).unwrap();
-      onSelectionClear();
-    } catch (error) {
-      console.log('Failed to delete users:', error);
-       if (error.status == 500)
-        navigate('/login?error=Your account is delete');
-    }
+    await executeUserOperation(() => deleteUsers(userIds).unwrap(), onSelectionClear);
   };
 
   const handleDeleteUnverifyUsers = async () => {
-    try {
-      await deleteUnverifyUsers().unwrap();
-    } catch (error) {
-      console.log('Failed to delete users:', error);
-              if (error.status == 500)
-        navigate('/login?error=Your account is delete');
-    }
+    await executeUserOperation(() => deleteUnverifyUsers().unwrap(), null);
   };
 
   return (
-    <EnhancedTableToolbar
-      numSelected={selectedUsers.length}
-      selectedUsers={selectedUsers}
-      onBlockUsers={handleBlockUsers}
-      onUnblockUsers={handleUnblockUsers}
-      onDeleteUsers={handleDeleteUsers}
-      onDeleteUnverifyUsers={handleDeleteUnverifyUsers}
-      onFilterChange={onFilterChange}
-    />
+    <>
+      <EnhancedTableToolbar
+        numSelected={selectedUsers.length}
+        selectedUsers={selectedUsers}
+        onBlockUsers={handleBlockUsers}
+        onUnblockUsers={handleUnblockUsers}
+        onDeleteUsers={handleDeleteUsers}
+        onDeleteUnverifyUsers={handleDeleteUnverifyUsers}
+        onFilterChange={onFilterChange}
+      />
+      {alertError && (
+        <Alert severity="error" sx={{ marginBottom: 2 }} onClose={() => setAlertError(null)}>
+          {alertError}
+        </Alert>
+      )}
+    </>
   );
 };
 

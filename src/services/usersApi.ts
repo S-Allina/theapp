@@ -13,12 +13,9 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithAuth = async (args: any, api: any, extraOptions: any) => {
   try {
     const result = await baseQuery(args, api, extraOptions);
+    // @ts-ignore
     if (result.error && result.error?.originalStatus === 403) {
       window.location.href = '#/theapp/login?error=Your account has been blocked';
-      return { data: undefined, error: undefined };
-    }
-    if (result?.Status === 500 && result.data.ErrorMessages[0].includes('User not found')) {
-      window.location.href = '#/theapp/login?error=Your account has been delete';
       return { data: undefined, error: undefined };
     }
     return result;
