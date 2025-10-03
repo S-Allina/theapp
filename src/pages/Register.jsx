@@ -56,9 +56,10 @@ export function Register() {
           state: { message: 'Your profile has been successfully created, check your email.' },
         });
       } else {
-        setRegisterError(result.data.message || result.errorMessages);
+        setRegisterError(result.data.message || result.ErrorMessages);
       }
     } catch (err) {
+      console.log(err);
       if (err?.data?.displayMessage) {
         setRegisterError(err.data.displayMessage);
       } else {
