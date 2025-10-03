@@ -59,12 +59,12 @@ export function Register() {
         setRegisterError(result.data.message || result.ErrorMessages);
       }
     } catch (err) {
-      console.log(err);
-      console.log(err.data.ErrorMessages[0]);
+      const errorMessage = err.data?.ErrorMessages?.[0];
+      console.log('Extracted error message:', errorMessage);
       if (err?.data?.displayMessage) {
         setRegisterError(err.data.displayMessage);
       } else {
-        setRegisterError(err.data.ErrorMessages[0]);
+        setRegisterError(errorMessage);
       }
     }
   };
