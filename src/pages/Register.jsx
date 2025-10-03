@@ -63,7 +63,7 @@ export function Register() {
       if (err?.data?.displayMessage) {
         setRegisterError(err.data.displayMessage);
       } else {
-        setRegisterError(err.data.ErrorMessages);
+        setRegisterError(err.data.ErrorMessages[0]);
       }
     }
   };
