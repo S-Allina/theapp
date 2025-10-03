@@ -60,6 +60,7 @@ export function Register() {
       }
     } catch (err) {
       console.log(err);
+      console.log(err.data.ErrorMessages[0]);
       if (err?.data?.displayMessage) {
         setRegisterError(err.data.displayMessage);
       } else {
