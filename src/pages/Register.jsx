@@ -60,7 +60,6 @@ export function Register() {
       }
     } catch (err) {
       const errorMessage = err.data?.ErrorMessages?.[0];
-      console.log('Extracted error message:', errorMessage);
       if (err?.data?.displayMessage) {
         setRegisterError(err.data.displayMessage);
       } else {

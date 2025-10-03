@@ -12,7 +12,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-span {
+span,
+h6 {
   color: rgb(88, 88, 88);
 }
 a {
