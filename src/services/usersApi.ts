@@ -19,7 +19,11 @@ const baseQueryWithAuth = async (args: any, api: any, extraOptions: any) => {
       (result.error?.originalStatus === 403 || result.error?.originalStatus === 401)
     ) {
       console.log(result);
-      window.location.href = `#/theapp/login?error=${result.error.message}`;
+      if (result.error?.originalStatus === 401)
+        window.location.href = `#/theapp/login?error=Unfortunately, you were unable to log in. Please try allowing third-party cookies in your browser.`;
+      else {
+        window.location.href = `#/theapp/login?error=${result.error.message}`;
+      }
       return { data: undefined, error: undefined };
     }
     return result;

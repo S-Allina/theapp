@@ -17,7 +17,6 @@ export const authApi = createApi({
         url: '/identity/login',
         method: 'POST',
         body: credentials,
-        credentials: 'include',
       }),
       transformResponse: (response: ApiResponse<LoginResponse>) => {
         if (response.isSuccess && response.result && response.result.Status != 'Blocked') {
@@ -38,7 +37,6 @@ export const authApi = createApi({
         url: '/identity/register',
         method: 'POST',
         body: userData,
-        credentials: 'include',
       }),
       transformResponse: (response: ApiResponse<RegisterResponse>) => {
         return response;
@@ -49,7 +47,6 @@ export const authApi = createApi({
         url: '/identity/forgot-password',
         method: 'POST',
         body: forgotPasswordRequest,
-        credentials: 'include',
       }),
     }),
     resetPassword: builder.mutation<ApiResponse<boolean>, ResetPasswordDto>({
@@ -57,7 +54,6 @@ export const authApi = createApi({
         url: '/identity/reset-password',
         method: 'POST',
         body: resetPasswordRequest,
-        credentials: 'include',
       }),
     }),
     logoutUser: builder.mutation<ApiResponse<boolean>, void>({
