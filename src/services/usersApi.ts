@@ -13,6 +13,7 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithAuth = async (args: any, api: any, extraOptions: any) => {
   try {
     const result = await baseQuery(args, api, extraOptions);
+    console.log(result)
     // @ts-ignore
     if (result.error && result.error?.originalStatus === 403) {
       window.location.href = '#/theapp/login?error=Your account has been blocked';
