@@ -13,21 +13,12 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithAuth = async (args: any, api: any, extraOptions: any) => {
   try {
     const result = await baseQuery(args, api, extraOptions);
-    console.log('result');
-    console.log(result);
-
     // @ts-ignore
-    if (
-      result.error &&
-      (result.error?.originalStatus === 403 || result.error?.originalStatus === 401)
-    ) {
-      console.log(result);
-      if (result.error?.originalStatus === 401)
-        window.location.href = `#/theapp/login?error=Unfortunately, you were unable to log in. Please try allowing third-party cookies in your browser.`;
-    
-        window.location.href = `#/theapp/login?error=${result.error.message}`;
+    if (result.error && result.error?.originalStatus === 403) {
+      console.log(result.error);
+      window.location.href = '#/theapp/login?error=Your account has been blocked';
       return { data: undefined, error: undefined };
-  }
+    }
     return result;
   } catch (error) {
     window.location.hash = '#/theapp/login?error=Unexpected error occurred';
@@ -43,6 +34,7 @@ export const usersApi = createApi({
     getUsers: builder.query<UserDto[], void>({
       query: () => ({
         url: '/users',
+        credentials: 'include',
       }),
       transformResponse: (response: ResponseDto) => {
         if (response?.isSuccess && response?.result) {
