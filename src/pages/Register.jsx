@@ -59,7 +59,7 @@ export function Register() {
         setRegisterError(result.data.message || result.ErrorMessages);
       }
     } catch (err) {
-      const errorMessage = err.data?.ErrorMessages?.[0];
+      const errorMessage = err.data?.ErrorMessages;
       if (err?.data?.displayMessage) {
         setRegisterError(err.data.displayMessage);
       } else {

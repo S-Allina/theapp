@@ -66,11 +66,11 @@ export function Login() {
         dispatch(login(result.result));
         navigate('/', { replace: true });
       } else {
-        setLoginError(result?.errorMessages[0] || result.displayMessage);
+        setLoginError(result?.errorMessages || result.displayMessage);
       }
     } catch (err) {
       if (err?.data?.displayMessage || err?.errorMessages) {
-        setLoginError(err.data.displayMessage || err.errorMessages[0]);
+        setLoginError(err.data.displayMessage || err.errorMessages);
       } else {
         setLoginError('Incorrect login or password.');
       }
