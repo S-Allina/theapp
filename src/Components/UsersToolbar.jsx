@@ -21,6 +21,7 @@ const UsersToolbar = ({ selectedUsers, onSelectionClear, onFilterChange }) => {
       await operation();
       if (onSuccess) onSuccess();
     } catch (error) {
+      
       if (error.status === 500 && error.data?.ErrorMessages?.includes('Error. User not found')) {
         navigate('/login?error=Your account is delete');
       } else {

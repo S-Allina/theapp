@@ -15,6 +15,8 @@ const baseQueryWithAuth = async (args: any, api: any, extraOptions: any) => {
     const result = await baseQuery(args, api, extraOptions);
     // @ts-ignore
     if (result.error && result.error?.originalStatus === 403) {
+
+      console.log(result.error)
       window.location.href = '#/theapp/login?error=Your account has been blocked';
       return { data: undefined, error: undefined };
     }
@@ -35,8 +37,11 @@ export const usersApi = createApi({
       transformResponse: (response: ResponseDto) => {
         if (response?.isSuccess && response?.result) {
           return response.result;
+        }else{
+          console.log(response);
+          return response.result;
         }
-        throw new Error(response.errorMessages?.join('.') || 'Failed to fetch users');
+        // throw new Error(response.errorMessages?.join('.') || 'Failed to fetch users');
       },
       providesTags: ['Users'],
     }),
