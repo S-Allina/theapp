@@ -13,17 +13,25 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithAuth = async (args: any, api: any, extraOptions: any) => {
   try {
     const result = await baseQuery(args, api, extraOptions);
-    console.log(result);
-    //     if (result?.Status === 500 && result.data.ErrorMessages[0].includes('User not found')) {
-    //   window.location.href = '#/theapp/login?error=Your account has been delete';
-    //   return { data: undefined, error: undefined };
-    // }
+    if (result?.Status === 500 && result.data.ErrorMessages[0].includes('User not found')) {
+      window.location.href = '#/theapp/login?error=Your account has been delete';
+      return { data: undefined, error: undefined };
+    }
 
-    // @ts-ignore
-    // if (result.error && result.error?.originalStatus === 403) {
-    //   window.location.href = '#/theapp/login?error=Your account has been blocked';
-    //   return { data: undefined, error: undefined };
-    // }
+    //@ts-ignore
+    if (result.error && result.error?.originalStatus === 403) {
+      window.location.href = '#/theapp/login?error=Your account has been blocked';
+      return { data: undefined, error: undefined };
+    }
+
+    if (
+      (result.error && result.error?.originalStatus === 302) ||
+      result.error?.status == 'FETCH_ERROR'
+    ) {
+      window.location.href =
+        '#/theapp/login?error=Login error, you may have banned third-party cookies. Resolve them and try again.';
+      return { data: undefined, error: undefined };
+    }
     return result;
   } catch (error) {
     window.location.hash = '#/theapp/login?error=Unexpected error occurred';
@@ -42,7 +50,6 @@ export const usersApi = createApi({
         if (response?.isSuccess && response?.result) {
           return response.result;
         }
-        console.log(response);
         throw new Error(response.errorMessages?.join('.') || 'Failed to fetch users');
       },
       providesTags: ['Users'],
