@@ -32,7 +32,10 @@ export const usersApi = createApi({
   tagTypes: ['Users'],
   endpoints: (builder) => ({
     getUsers: builder.query<UserDto[], void>({
-      query: () => '/users',
+      query: () => ({
+        url: '/users',
+        credentials: 'include',
+      }),
       transformResponse: (response: ResponseDto) => {
         if (response?.isSuccess && response?.result) {
           return response.result;
@@ -56,6 +59,7 @@ export const usersApi = createApi({
         url: '/users/block',
         method: 'PATCH',
         body: userIds,
+        credentials: 'include',
       }),
       onQueryStarted: async (userIds, { dispatch, queryFulfilled }) => {
         try {
@@ -75,6 +79,7 @@ export const usersApi = createApi({
         url: '/users/unblock',
         method: 'PATCH',
         body: userIds,
+        credentials: 'include',
       }),
       invalidatesTags: ['Users'],
     }),
