@@ -13,6 +13,9 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithAuth = async (args: any, api: any, extraOptions: any) => {
   try {
     const result = await baseQuery(args, api, extraOptions);
+    console.log('result');
+    console.log(result);
+
     // @ts-ignore
     if (
       result.error &&
