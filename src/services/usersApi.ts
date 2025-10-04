@@ -15,7 +15,6 @@ const baseQueryWithAuth = async (args: any, api: any, extraOptions: any) => {
     const result = await baseQuery(args, api, extraOptions);
     // @ts-ignore
     if (result.error && result.error?.originalStatus === 403) {
-      console.log(result.error);
       window.location.href = '#/theapp/login?error=Your account has been blocked';
       return { data: undefined, error: undefined };
     }
@@ -32,10 +31,7 @@ export const usersApi = createApi({
   tagTypes: ['Users'],
   endpoints: (builder) => ({
     getUsers: builder.query<UserDto[], void>({
-      query: () => ({
-        url: '/users',
-        credentials: 'include',
-      }),
+      query: () => '/users',
       transformResponse: (response: ResponseDto) => {
         if (response?.isSuccess && response?.result) {
           return response.result;
@@ -48,7 +44,6 @@ export const usersApi = createApi({
       query: () => ({
         url: '/users/activity',
         method: 'POST',
-        credentials: 'include',
       }),
     }),
     blockUsers: builder.mutation<ResponseDto, string[]>({
@@ -56,7 +51,6 @@ export const usersApi = createApi({
         url: '/users/block',
         method: 'PATCH',
         body: userIds,
-        credentials: 'include',
       }),
       onQueryStarted: async (userIds, { dispatch, queryFulfilled }) => {
         try {
@@ -76,7 +70,6 @@ export const usersApi = createApi({
         url: '/users/unblock',
         method: 'PATCH',
         body: userIds,
-        credentials: 'include',
       }),
       invalidatesTags: ['Users'],
     }),
@@ -85,7 +78,6 @@ export const usersApi = createApi({
         url: '/users',
         method: 'DELETE',
         body: userIds,
-        credentials: 'include',
       }),
       onQueryStarted: async (userIds, { dispatch, queryFulfilled }) => {
         try {
@@ -104,7 +96,6 @@ export const usersApi = createApi({
       query: () => ({
         url: '/users/unconfirmedUsers',
         method: 'DELETE',
-        credentials: 'include',
       }),
       invalidatesTags: ['Users'],
     }),
