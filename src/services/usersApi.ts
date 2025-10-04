@@ -44,7 +44,6 @@ export const usersApi = createApi({
     getUsers: builder.query<UserDto[], void>({
       query: () => ({
         url: '/users',
-        credentials: 'include',
       }),
       transformResponse: (response: ResponseDto) => {
         if (response?.isSuccess && response?.result) {
