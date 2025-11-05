@@ -58,13 +58,23 @@ export const AuthLayout = ({
           <h2
             style={{
               textAlign: 'left',
-              margin: '0 0 1rem 0',
+              margin: '0 0 0 0',
               color: '#000',
               fontSize: '1.5rem',
             }}
           >
             {title}
           </h2>
+          <p
+            style={{
+              textAlign: 'left',
+              margin: '0 0 1rem 0',
+              color: '#6d6d6dff',
+              fontSize: '0.7rem',
+            }}
+          >
+            *For proper operation, please enable third-party cookies.
+          </p>
           {children}
         </Box>
         <Box
