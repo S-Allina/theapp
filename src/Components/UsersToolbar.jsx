@@ -5,14 +5,16 @@ import {
   useUnblockUsersMutation,
   useDeleteUsersMutation,
   useDeleteUnverifyUsersMutation,
+  useChangeRoleUsersMutation,
 } from '../services/usersApi';
 import { useNavigate } from 'react-router-dom';
-
+import {Alert} from "@mui/material"
 const UsersToolbar = ({ selectedUsers, onSelectionClear, onFilterChange }) => {
   const [blockUsers] = useBlockUsersMutation();
   const [unblockUsers] = useUnblockUsersMutation();
   const [deleteUsers] = useDeleteUsersMutation();
   const [deleteUnverifyUsers] = useDeleteUnverifyUsersMutation();
+    const [changeRoleUsers] = useChangeRoleUsersMutation();
   const [alertError, setAlertError] = useState('');
   const navigate = useNavigate();
 
@@ -49,6 +51,26 @@ const UsersToolbar = ({ selectedUsers, onSelectionClear, onFilterChange }) => {
     await executeUserOperation(() => deleteUnverifyUsers().unwrap(), null);
   };
 
+  const handlePromoteToAdmin = async (userIds) => {
+    await executeUserOperation(() => 
+      changeRoleUsers({ 
+        userIds, 
+        role: 'Admin' 
+      }).unwrap(), 
+      onSelectionClear
+    );
+  };
+
+  const handleDemoteToUser = async (userIds) => {
+    await executeUserOperation(() => 
+      changeRoleUsers({ 
+        userIds, 
+        role: 'User'
+      }).unwrap(), 
+      onSelectionClear
+    );
+  };
+
   return (
     <>
       <EnhancedTableToolbar
@@ -59,6 +81,8 @@ const UsersToolbar = ({ selectedUsers, onSelectionClear, onFilterChange }) => {
         onDeleteUsers={handleDeleteUsers}
         onDeleteUnverifyUsers={handleDeleteUnverifyUsers}
         onFilterChange={onFilterChange}
+        onPromoteToAdmin={handlePromoteToAdmin} 
+        onDemoteToUser={handleDemoteToUser}
       />
       {alertError && (
         <Alert severity="error" sx={{ marginBottom: 2 }} onClose={() => setAlertError(null)}>

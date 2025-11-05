@@ -13,6 +13,8 @@ export function EnhancedTableToolbar(props) {
     onDeleteUsers,
     onFilterChange,
     onDeleteUnverifyUsers,
+    onPromoteToAdmin,
+    onDemoteToUser, 
   } = props;
 
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
@@ -63,7 +65,25 @@ export function EnhancedTableToolbar(props) {
       showSnackbar('Failed to delete nverify users', error);
     }
   };
+const handlePromoteToAdmin = async () => {
+    if (selectedUsers.length === 0) return;
+    try {
+      await onPromoteToAdmin(selectedUsers);
+      showSnackbar(`Successfully promoted ${selectedUsers.length} user(s) to admin`, 'success');
+    } catch (error) {
+      showSnackbar('Failed to promote users to admin', error);
+    }
+  };
 
+  const handleDemoteToUser = async () => {
+    if (selectedUsers.length === 0) return;
+    try {
+      await onDemoteToUser(selectedUsers);
+      showSnackbar(`Successfully demoted ${selectedUsers.length} user(s) to regular user`, 'success');
+    } catch (error) {
+      showSnackbar('Failed to demote users', error);
+    }
+  };
   return (
     <>
       <Toolbar
@@ -87,6 +107,8 @@ export function EnhancedTableToolbar(props) {
           onUnblock={handleUnblock}
           onDelete={handleDelete}
           onDeleteUnverify={handleDeleteUnverifyUsers}
+          onPromoteToAdmin={handlePromoteToAdmin}
+          onDemoteToUser={handleDemoteToUser} 
         />
         <FilterInput onFilterChange={onFilterChange} />
       </Toolbar>

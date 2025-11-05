@@ -22,7 +22,6 @@ export function Register() {
   const [firstnameValue, setFirstnameValue] = useState('');
   const [lastnameValue, setLastnameValue] = useState('');
   const [emailValue, setEmailValue] = useState('');
-  const [jobValue, setJobValue] = useState('');
   const [password, setPassword] = useState('');
   const [registerUser] = useRegisterUserMutation();
   const dispatch = useDispatch();
@@ -46,9 +45,10 @@ export function Register() {
         firstname: firstnameValue,
         lastname: lastnameValue,
         email: emailValue,
-        job: jobValue,
         password,
       }).unwrap();
+
+      console.log('result',result);
       if (result && result.isSuccess && result.result && result.result.email != null) {
         dispatch(register());
         navigate('/login', {
@@ -56,12 +56,14 @@ export function Register() {
           state: { message: 'Your profile has been successfully created, check your email.' },
         });
       } else {
-        setRegisterError(result.data.message || result.ErrorMessages);
+        setRegisterError(result.message || 'Registration failed. Check data and try again.');
       }
     } catch (err) {
+            console.log('err',err);
+
       const errorMessage = err.data?.ErrorMessages;
-      if (err?.data?.displayMessage) {
-        setRegisterError(err.data.displayMessage);
+      if (err?.data?.message || err?.data?.displayMessage) {
+        setRegisterError(err.data.displayMessage || err.data.message);
       } else {
         setRegisterError(errorMessage);
       }
@@ -99,17 +101,6 @@ export function Register() {
           <OutlinedInput
             value={lastnameValue}
             onChange={(e) => setLastnameValue(e.target.value)}
-            id="outlined-adornment-weight"
-            aria-describedby="outlined-weight-helper-text"
-            inputProps={{ 'aria-label': 'weight' }}
-          />
-        </FormControl>
-        <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-weight">Job</InputLabel>
-          <OutlinedInput
-            value={jobValue}
-            onChange={(e) => setJobValue(e.target.value)}
-            required={true}
             id="outlined-adornment-weight"
             aria-describedby="outlined-weight-helper-text"
             inputProps={{ 'aria-label': 'weight' }}

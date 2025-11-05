@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import urls from './url';
 
-// https://vite.dev/config/
 export default defineConfig({
   base: '/theapp/',
   plugins: [react()],
@@ -9,7 +9,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://theapptask5.somee.com',
+        target: urls.AUTH,
         changeOrigin: true,
         secure: false,
       },

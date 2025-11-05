@@ -9,7 +9,7 @@ export function EnhancedTableHead(props) {
     };
 
   return (
-    <TableHead sx={{ position: 'sticky', top: 0, backgroundColor: 'white', zIndex: 10 }}>
+    <TableHead sx={{ position: 'sticky', top: 0, zIndex: 10 }}>
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox

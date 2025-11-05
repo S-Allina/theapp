@@ -6,30 +6,39 @@ import {
   InputLabel,
   IconButton,
   Button,
+  Box
 } from '@mui/material';
 import { Email, Visibility, VisibilityOff } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { useLoginUserMutation } from '../services/authApi';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../slices/authSlice';
-import { useLocation, Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { useLocation, Link, useSearchParams } from 'react-router-dom';
 import { AuthLayout } from '../Layout/AuthLayout';
-
+import GoogleIcon from '@mui/icons-material/Google';
+import urls from '../../url';
 export function Login() {
   const [searchParams, setSearchParams] = useSearchParams();
   const message = searchParams.get('message');
   const errorFromPath = searchParams.get('error');
-
   const [showPassword, setShowPassword] = useState(false);
-  const [loginValue, setloginValue] = useState('');
-  const [password, setPassword] = useState('');
   const [loginMessage, setLoginMessage] = useState('');
   const [loginError, setLoginError] = useState('');
   const [loginUser] = useLoginUserMutation();
   const location = useLocation();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const isLoading = useSelector((state) => state.auth.isLoading);
+  
+  const r = searchParams.get('returnUrl');
+  
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+    defaultValues: {
+      email: '',
+      password: ''
+    },
+    mode: 'onChange'
+  });
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -40,6 +49,13 @@ export function Login() {
   const handleMouseUpPassword = (event) => {
     event.preventDefault();
   };
+
+  useEffect(() => {
+    if (r) {
+      const decodedReturnUrl = decodeURIComponent(r);
+      localStorage.setItem('oidc_return_url', decodedReturnUrl);
+    }
+  }, [r]);
 
   useEffect(() => {
     if (message) {
@@ -56,15 +72,36 @@ export function Login() {
     }
   }, [location]);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+const handleGoogleLogin = () => {
+  const clientId = "MainMVCApp";
+  const redirectUri = `${urls.MAIN}/signin-oidc`;
+  const scope = "openid profile email api1";
+  
+  const authUrl = `${urls.AUTH}/connect/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scope)}&prompt=login`;
+  
+  window.location.href = authUrl;
+};
+
+  const onSubmit = async (data) => {
     setLoginError(null);
     try {
-      const result = await loginUser({ email: loginValue, password }).unwrap();
+      const savedReturnUrl = localStorage.getItem('oidc_return_url');
+      const finalReturnUrl = savedReturnUrl || `/connect/authorize?client_id=MainMVCApp&redirect_uri=${urls.MAIN}/signin-oidc&response_type=code&scope=openid profile email api1`;
+      
+      const result = await loginUser({ 
+        email: data.email, 
+        password: data.password, 
+        returnUrl: finalReturnUrl 
+      }).unwrap();
 
-      if (result.isSuccess) {
+      console.log('in jsx', result);
+
+      if (result.returnUrl) {
         dispatch(login(result.result));
-        navigate('/', { replace: true });
+        
+        localStorage.removeItem('oidc_return_url');
+        
+        window.location.href = `${urls.AUTH}${result.returnUrl}`;
       } else {
         setLoginError(result?.errorMessages || result.displayMessage);
       }
@@ -101,40 +138,65 @@ export function Login() {
           flexDirection: 'column',
           alignItems: 'center',
         }}
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
       >
         {(loginError || errorFromPath) && (
-          <Alert severity="error" sx={{ marginBottom: 2 }}>
+          <Alert severity="error" sx={{ marginBottom: 2, width: '100%' }}>
             {loginError || errorFromPath}
           </Alert>
         )}
         {loginMessage && (
-          <Alert severity="success" sx={{ marginBottom: 2 }}>
+          <Alert severity="success" sx={{ marginBottom: 2, width: '100%' }}>
             {loginMessage}
           </Alert>
         )}
-        <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-weight">Email</InputLabel>
+        
+        <FormControl 
+          sx={{ m: 1, width: '100%' }} 
+          variant="outlined"
+          error={!!errors.email}
+        >
+          <InputLabel htmlFor="email">Email</InputLabel>
           <OutlinedInput
-            value={loginValue}
-            onChange={(e) => setloginValue(e.target.value)}
-            id="outlined-adornment-weight"
+            id="email"
+            type="email"
+            {...register("email", {
+              required: 'Email is required',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Invalid email address'
+              }
+            })}
             endAdornment={
               <InputAdornment position="end">
                 <Email />
               </InputAdornment>
             }
-            aria-describedby="outlined-weight-helper-text"
-            inputProps={{ 'aria-label': 'weight' }}
+            label="Email"
           />
+          {errors.email && (
+            <Alert severity="error" sx={{ mt: 1, fontSize: '0.75rem' }}>
+              {errors.email.message}
+            </Alert>
+          )}
         </FormControl>
-        <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+
+        <FormControl 
+          sx={{ m: 1, width: '100%' }} 
+          variant="outlined"
+          error={!!errors.password}
+        >
+          <InputLabel htmlFor="password">Password</InputLabel>
           <OutlinedInput
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            id="outlined-adornment-password"
+            id="password"
             type={showPassword ? 'text' : 'password'}
+            {...register("password", {
+              required: 'Password is required',
+              minLength: {
+                value: 6,
+                message: 'Password must be at least 6 characters'
+              }
+            })}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -150,9 +212,20 @@ export function Login() {
             }
             label="Password"
           />
+          {errors.password && (
+            <Alert severity="error" sx={{ mt: 1, fontSize: '0.75rem' }}>
+              {errors.password.message}
+            </Alert>
+          )}
         </FormControl>
-        <Button variant="contained" type="submit" sx={{ m: 1, width: '100%' }}>
-          Sign In
+
+        <Button 
+          variant="contained" 
+          type="submit" 
+          sx={{ m: 1, width: '100%' }}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Signing In...' : 'Sign In'}
         </Button>
       </form>
     </AuthLayout>

@@ -11,6 +11,8 @@ export const ActionButtons = ({
   onUnblock,
   onDelete,
   onDeleteUnverify,
+  onPromoteToAdmin,
+    onDemoteToUser,
 }) => {
   return (
     <>
@@ -37,6 +39,27 @@ export const ActionButtons = ({
           disabled={selectedUsers.length === 0}
         >
           <LockOpenIcon />
+        </Button>
+      </Tooltip>
+      <Tooltip title="Promote to admin">
+        <Button 
+          onClick={onPromoteToAdmin} 
+          disabled={numSelected === 0}
+          color="primary"
+          variant="contained"
+        >
+          Make Admin
+        </Button>
+      </Tooltip>
+      
+      <Tooltip title="Demote to regular user">
+        <Button 
+          onClick={onDemoteToUser} 
+          disabled={numSelected === 0}
+          color="secondary"
+          variant="outlined"
+        >
+          Make User
         </Button>
       </Tooltip>
       <Tooltip title="Delete selected users" sx={{ alignSelf: 'stretch' }}>

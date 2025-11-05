@@ -10,6 +10,8 @@ import {
 } from '../slices/usersSlice';
 import UsersToolbar from '../Components/UsersToolbar';
 import UsersTable from '../Components/UsersTable';
+import { setTheme } from '../slices/authSlice';
+import urls from '../../url';
 
 const generateChartData = () => {
   return Array.from({ length: 8 }, () => Math.floor(Math.random() * 7) + 1);
@@ -27,7 +29,6 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 export default function Users() {
-  const status = useSelector((state) => state.auth.user.status);
   const selectedUsers = useSelector((state) => state.users.selectedUsers);
   const [filterValue, setFilterValue] = useState('');
   const [order, setOrder] = useState('asc');
@@ -66,15 +67,36 @@ export default function Users() {
     dispatch(setSelectedUsers([]));
   }, [dispatch]);
 
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      try {
+        const response = await fetch(`${urls.AUTH}/api/auth/check-auth`, {
+          credentials: 'include',
+        });
+        if (!response.ok) {
+          window.location.href =
+            `${urls.AUTH}/Account/Login?returnUrl=/connect/authorize?client_id=MainMVCApp&redirect_uri=${urls.MAIN}/signin-oidc&response_type=code&scope=openid profile email api1`;
+        } else {
+          const authData = await response.json();
+          dispatch(setTheme(authData?.theme || 'dark'));
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+      }
+    };
+
+    checkAuthentication();
+  }, [dispatch]);
+
   const rows = useMemo(() => {
+    console.log('users', users)
     return users.map((user) => ({
       id: user.id,
       Name: user.firstName + ' ' + user.lastName,
-      profession: user.job || 'No job specified',
       Email: user.email,
       emailConfirmed: user.emailConfirmed,
       Status: user.status,
-      lastActivity: user.lastActivity,
+      role: user.role,
       chartData: generateChartData(),
     }));
   }, [users]);

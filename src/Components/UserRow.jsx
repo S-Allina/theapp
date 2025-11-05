@@ -41,18 +41,7 @@ const UserRow = ({ row, isItemSelected, labelId, onUserClick }) => {
       <TableCell align="right">{row.Email}</TableCell>
       <TableCell align="right">{row.Status}</TableCell>
       <TableCell align="right">
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-          <TimeAgo dateString={row.lastActivity} sx={{ mb: 1 }} />
-          <Box sx={{ width: 80, height: 40 }}>
-            <SparkLineChart
-              plotType="bar"
-              data={row.chartData}
-              height={40}
-              width={80}
-              colors={['#1976d2']}
-            />
-          </Box>
-        </Box>
+        {row.role}
       </TableCell>
     </TableRow>
   );

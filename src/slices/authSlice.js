@@ -1,31 +1,23 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  isAuthenticated: localStorage.getItem('Status') !== 'Blocked',
-  user: {
-    userId: localStorage.getItem('Id') || null,
-    userName: localStorage.getItem('userName') || null,
-    email: localStorage.getItem('userEmail') || null,
-    status: localStorage.getItem('status') || null,
-    emailConfirmed: localStorage.getItem('emailConfirmed') || null,
-  },
+  isAuthenticated: false,
+  user: null,
   isLoading: false,
   error: null,
 };
 
-export const checkAuth = createAsyncThunk('auth/checkAuth', async () => {
-  const userId = localStorage.getItem('Id');
-  const status = localStorage.getItem('status');
 
-  if (userId && status != 'Blocked') {
+
+export const checkAuth = createAsyncThunk('auth/checkAuth', async () => {
+  const userId = localStorage.getItem('userId');
+  const email = localStorage.getItem('email');
+
+  if (email || userId) {
     return {
       isAuthenticated: true,
       user: {
-        userId: userId,
-        userName: localStorage.getItem('userName') || null,
-        email: localStorage.getItem('userEmail') || null,
-        status: localStorage.getItem('status') || null,
-        emailConfirmed: localStorage.getItem('emailConfirmed') || null,
+        userId: userId
       },
     };
   } else {
@@ -41,42 +33,40 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action) => {
-      state.isAuthenticated = action.payload.status !== 'Blocked';
-      state.user = {
-        userId: action.payload.Id,
-        userName: action.payload.userName,
-        email: action.payload.email,
-        status: action.payload.status,
-        emailConfirmed: action.payload.emailConfirmed,
-      };
-      localStorage.setItem('emailConfirmed', action.payload.emailConfirmed);
-      localStorage.setItem('Id', action.payload.Id);
-      localStorage.setItem('userName', action.payload.userName);
-      localStorage.setItem('userEmail', action.payload.email);
-      localStorage.setItem('status', action.payload.status);
+      state.isAuthenticated = true;
+      state.user = action.payload;
+      state.error = null;
+      state.theme = action.payload;
+      localStorage.setItem('userId', action.payload.id);
+      localStorage.setItem('email', action.payload.email);
+      localStorage.setItem('theme', action.payload);
+    },
+    toggleTheme: (state) => {
+      state.theme = state.theme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('theme', state.theme);
+    },
+    setTheme: (state, action) => {
+      state.theme = action.payload;
+      localStorage.setItem('theme', action.payload);
     },
     register: () => {},
     logout: (state) => {
       state.isAuthenticated = false;
-      state.user = {
-        userId: null,
-        userName: null,
-        email: null,
-        status: null,
-        emailConfirmed: null,
-      };
+      state.user = null;
       state.isLoading = false;
       state.error = null;
-      localStorage.removeItem('emailConfirmed');
-      localStorage.removeItem('Id');
-      localStorage.removeItem('userName');
-      localStorage.removeItem('userEmail');
-      localStorage.removeItem('status');
+      
+      localStorage.removeItem('userId');
+      localStorage.removeItem('email');
     },
+    clearError: (state) => {
+      state.error = null;
+    }
   },
   extraReducers: (builder) => {
     builder
-      .addCase(checkAuth.pending, (state) => {
+
+    .addCase(checkAuth.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
@@ -90,9 +80,9 @@ export const authSlice = createSlice({
       .addCase(checkAuth.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
-      });
+      })      
   },
 });
 
-export const { login, logout, register } = authSlice.actions;
+export const { login, logout, register, clearError, toggleTheme, setTheme } = authSlice.actions;
 export default authSlice.reducer;

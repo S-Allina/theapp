@@ -5,6 +5,11 @@ import { logout } from '../slices/authSlice';
 const baseQuery = fetchBaseQuery({
   baseUrl: API_BASE_URL,
   prepareHeaders: (headers) => {
+    const token = localStorage.getItem('token');
+    console.log(token);
+    if (token) {
+      headers.set('Authorization', `Bearer ${token}`);
+    }
     return headers;
   },
   credentials: 'include',
@@ -13,28 +18,30 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithAuth = async (args: any, api: any, extraOptions: any) => {
   try {
     const result = await baseQuery(args, api, extraOptions);
-    if (result?.Status === 500 && result.data.ErrorMessages[0].includes('User not found')) {
-      window.location.href = '#/theapp/login?error=Your account has been delete';
+        if (result?.error?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      window.location.href = '#/theapp/login?error=Session expired';
       return { data: undefined, error: undefined };
     }
-
-    //@ts-ignore
-    if (result.error && result.error?.originalStatus === 403) {
+    if (result?.error?.status === 403) {
       window.location.href = '#/theapp/login?error=Your account has been blocked';
       return { data: undefined, error: undefined };
     }
-
-    if (
-      (result.error && result.error?.originalStatus === 302) ||
-      result.error?.status == 'FETCH_ERROR'
-    ) {
-      window.location.href =
-        '#/theapp/login?error=Login error, you may have banned third-party cookies. Resolve them and try again.';
+    if (result?.error?.status === 404) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      window.location.href = '#/theapp/login?error=User not found';
       return { data: undefined, error: undefined };
     }
+    if (result?.error?.status === 'FETCH_ERROR') {
+      window.location.href = '#/theapp/login?error=Network error, please try again';
+      return { data: undefined, error: undefined };
+    }
+
     return result;
   } catch (error) {
-    window.location.hash = '#/theapp/login?error=Unexpected error occurred';
+    window.location.href = '#/theapp/login?error=Unexpected error occurred';
     return { data: undefined, error: undefined };
   }
 };
@@ -45,7 +52,7 @@ export const usersApi = createApi({
   tagTypes: ['Users'],
   endpoints: (builder) => ({
     getUsers: builder.query<UserDto[], void>({
-      query: () => '/users',
+      query: () => '/user',
       transformResponse: (response: ResponseDto) => {
         if (response?.isSuccess && response?.result) {
           return response.result;
@@ -54,15 +61,19 @@ export const usersApi = createApi({
       },
       providesTags: ['Users'],
     }),
-    updateActivity: builder.mutation<void, void>({
-      query: () => ({
-        url: '/users/activity',
-        method: 'POST',
-      }),
+    getUserById: builder.query<UserDto, string>({
+      query: (id) => `/user/${id}`,
+      transformResponse: (response: ResponseDto) => {
+        if (response?.isSuccess && response?.result) {
+          return response.result;
+        }
+        throw new Error(response.errorMessages?.join('.') || 'Failed to fetch user');
+      },
+      providesTags: ['User'],
     }),
     blockUsers: builder.mutation<ResponseDto, string[]>({
       query: (userIds) => ({
-        url: '/users/block',
+        url: '/user/block',
         method: 'PATCH',
         body: userIds,
       }),
@@ -81,15 +92,23 @@ export const usersApi = createApi({
     }),
     unblockUsers: builder.mutation<ResponseDto, string[]>({
       query: (userIds) => ({
-        url: '/users/unblock',
+        url: '/user/unblock',
         method: 'PATCH',
         body: userIds,
       }),
       invalidatesTags: ['Users'],
     }),
+   changeRoleUsers: builder.mutation<ResponseDto, { userIds: string[], role: string }>({
+  query: ({ userIds, role }) => ({
+    url: '/user/role',
+    method: 'PATCH',
+    body: { userIds, role }, 
+  }),
+  invalidatesTags: ['Users'],
+}),
     deleteUsers: builder.mutation<ResponseDto, string[]>({
       query: (userIds) => ({
-        url: '/users',
+        url: '/user',
         method: 'DELETE',
         body: userIds,
       }),
@@ -108,7 +127,7 @@ export const usersApi = createApi({
     }),
     deleteUnverifyUsers: builder.mutation<ResponseDto, void>({
       query: () => ({
-        url: '/users/unconfirmedUsers',
+        url: '/user/unconfirmedUsers',
         method: 'DELETE',
       }),
       invalidatesTags: ['Users'],
@@ -119,10 +138,11 @@ export const usersApi = createApi({
 export const {
   useGetUsersQuery,
   useBlockUsersMutation,
+  useGetUserByIdQuery,
   useUnblockUsersMutation,
   useDeleteUsersMutation,
-  useUpdateActivityMutation,
   useDeleteUnverifyUsersMutation,
+  useChangeRoleUsersMutation,
 } = usersApi;
 
 interface UserDto {
@@ -131,8 +151,6 @@ interface UserDto {
   lastName: string;
   email: string;
   emailConfirmed: boolean;
-  job: string;
-  lastActivity: string;
   status: string;
 }
 
