@@ -51,7 +51,7 @@ export function ResetPassword() {
         setError(result.displayMessage || 'Failed to send reset email');
       }
     } catch (err) {
-      setError(err || 'Failed to send reset email');
+      setError(err?.data?.message || 'Failed to send reset email');
     }
   };
 
@@ -84,7 +84,7 @@ export function ResetPassword() {
         setError(result.displayMessage || 'Failed to reset password');
       }
     } catch (err) {
-      setError(err?.data?.displayMessage || 'Failed to reset password');
+      setError(err?.data?.message || 'Failed to reset password');
     }
   };
 
