@@ -13,11 +13,10 @@ import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { setTheme } from './slices/authSlice';
 const ThemeWrapper = ({ children }) => {
-   const themeMode = useSelector((state) => state.auth.theme);
-      const state = useSelector((state) => state);
-const normalized = "light";
+  const themeMode = useSelector((state) => state.auth.theme);
+  const state = useSelector((state) => state);
+  const normalized = 'light';
   const dispatch = useDispatch();
-
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
@@ -56,9 +55,18 @@ const App = () => {
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/register" element={<Register />} />
             <Route element={<PrivateRoute />}>
-            <Route path="/profile" element={<UserProfilePage/>}/>
               <Route
-                path="/"
+                path="/profile"
+                element={
+                  <>
+                    <Header />
+
+                    <UserProfilePage />
+                  </>
+                }
+              />
+              <Route
+                path="/users"
                 element={
                   <>
                     <Header />
