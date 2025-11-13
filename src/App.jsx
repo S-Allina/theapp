@@ -12,6 +12,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { setTheme } from './slices/authSlice';
+import { UserProfilePage } from './pages/UserProfilePage';
 const ThemeWrapper = ({ children }) => {
   const themeMode = useSelector((state) => state.auth.theme);
   const state = useSelector((state) => state);
