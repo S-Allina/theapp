@@ -1,6 +1,6 @@
 import React from 'react';
-import SalesforceProfileForm from './SalesforceProfileForm';
 import { useCreateSalesforceAccountMutation } from '../services/authApi';
+import SalesforceProfileForm from '../Components/SalesforceProfileForm';
 
 // Можно добавить тестовую кнопку для разработки
 const TestSalesforceButton = () => {
