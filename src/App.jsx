@@ -75,7 +75,7 @@ const App = () => {
                 }
               />
             </Route>
-            <Route path="*" element={<Navigate to="/" />} />
+            <Route path="*" element={<Navigate to="/users" />} />
           </Routes>
         </ThemeWrapper>
       </Router>
