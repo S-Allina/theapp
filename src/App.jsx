@@ -56,6 +56,7 @@ const App = () => {
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/register" element={<Register />} />
             <Route element={<PrivateRoute />}>
+            <Route path="/profile" element={<UserProfilePage/>}/>
               <Route
                 path="/"
                 element={

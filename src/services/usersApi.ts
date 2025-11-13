@@ -19,7 +19,6 @@ const baseQueryWithAuth = async (args: any, api: any, extraOptions: any) => {
   try {
     const result = await baseQuery(args, api, extraOptions);
         if (result?.error?.status === 401) {
-      localStorage.removeItem('token');
       localStorage.removeItem('userId');
       window.location.href = '#/theapp/login?error=Session expired';
       return { data: undefined, error: undefined };
@@ -29,7 +28,6 @@ const baseQueryWithAuth = async (args: any, api: any, extraOptions: any) => {
       return { data: undefined, error: undefined };
     }
     if (result?.error?.status === 404) {
-      localStorage.removeItem('token');
       localStorage.removeItem('userId');
       window.location.href = '#/theapp/login?error=User not found';
       return { data: undefined, error: undefined };
@@ -71,30 +69,11 @@ export const usersApi = createApi({
       },
       providesTags: ['User'],
     }),
-    blockUsers: builder.mutation<ResponseDto, string[]>({
-      query: (userIds) => ({
-        url: '/user/block',
+    changeStatusUsers: builder.mutation<ResponseDto, { userIds: string[], status: string }>({
+      query: ({ userIds, status }) => ({
+        url: '/user/status',
         method: 'PATCH',
-        body: userIds,
-      }),
-      onQueryStarted: async (userIds, { dispatch, queryFulfilled }) => {
-        try {
-          const { data } = await queryFulfilled;
-          if (data.isSuccess && data.result) {
-            dispatch(
-              usersApi.util.updateQueryData('getUsers', undefined, (draft) => {
-                return data.result;
-              }),
-            );
-          }
-        } catch (error) {}
-      },
-    }),
-    unblockUsers: builder.mutation<ResponseDto, string[]>({
-      query: (userIds) => ({
-        url: '/user/unblock',
-        method: 'PATCH',
-        body: userIds,
+        body: { userIds, status },
       }),
       invalidatesTags: ['Users'],
     }),
@@ -127,7 +106,7 @@ export const usersApi = createApi({
     }),
     deleteUnverifyUsers: builder.mutation<ResponseDto, void>({
       query: () => ({
-        url: '/user/unconfirmedUsers',
+        url: '/user/unconfirmed',
         method: 'DELETE',
       }),
       invalidatesTags: ['Users'],
@@ -137,9 +116,8 @@ export const usersApi = createApi({
 
 export const {
   useGetUsersQuery,
-  useBlockUsersMutation,
   useGetUserByIdQuery,
-  useUnblockUsersMutation,
+  useChangeStatusUsersMutation,
   useDeleteUsersMutation,
   useDeleteUnverifyUsersMutation,
   useChangeRoleUsersMutation,

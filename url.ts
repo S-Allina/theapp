@@ -1,7 +1,7 @@
 const urls = {
-  FRONT: 'https://s-allina.github.io',
-  AUTH: 'https://Identity.somee.com',
-  MAIN: 'https://CourseProject.somee.com',
+  FRONT: 'http://localhost:5173',
+  AUTH: 'https://localhost:7052',
+  MAIN: 'https://localhost:7004',
 };
 
 export default urls;

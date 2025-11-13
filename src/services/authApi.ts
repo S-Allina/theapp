@@ -67,6 +67,13 @@ export const authApi = createApi({
         body: forgotPasswordRequest,
       }),
     }),
+    createSalesforceAccount: builder.mutation<ApiResponse<boolean>, UserAdditionalInfoDto>({
+  query: (userInfo) => ({
+    url: '/auth/create-salesforce-account',
+    method: 'POST',
+    body: userInfo,
+  }),
+}),
     resetPassword: builder.mutation<ApiResponse<boolean>, ResetPasswordDto>({
       query: (resetPasswordRequest) => ({
         url: '/auth/reset-password',
@@ -105,6 +112,7 @@ export const {
   useRegisterUserMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  useCreateSalesforceAccountMutation,
 } = authApi;
 
 interface LoginRequest {
@@ -153,3 +161,21 @@ interface ResetPasswordDto {
   token: string;
 }
 
+interface UserAdditionalInfoDto {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  companyName?: string;
+  industry?: string;
+  website?: string;
+  jobTitle?: string;
+  department?: string;
+  street?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+  country?: string;
+  leadSource?: string;
+  description?: string;
+}

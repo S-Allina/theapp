@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { EnhancedTableToolbar } from '../Components/EnhancedTableToolbar';
 import {
-  useBlockUsersMutation,
-  useUnblockUsersMutation,
+  useChangeStatusUsersMutation,
   useDeleteUsersMutation,
   useDeleteUnverifyUsersMutation,
   useChangeRoleUsersMutation,
@@ -10,8 +9,9 @@ import {
 import { useNavigate } from 'react-router-dom';
 import {Alert} from "@mui/material"
 const UsersToolbar = ({ selectedUsers, onSelectionClear, onFilterChange }) => {
-  const [blockUsers] = useBlockUsersMutation();
-  const [unblockUsers] = useUnblockUsersMutation();
+  const BLOCKED="Blocked";
+  const ACTIVITY = "Activity";
+  const [changeStatusUsers] = useChangeStatusUsersMutation();
   const [deleteUsers] = useDeleteUsersMutation();
   const [deleteUnverifyUsers] = useDeleteUnverifyUsersMutation();
     const [changeRoleUsers] = useChangeRoleUsersMutation();
@@ -37,10 +37,10 @@ const UsersToolbar = ({ selectedUsers, onSelectionClear, onFilterChange }) => {
   };
 
   const handleBlockUsers = async (userIds) => {
-    await executeUserOperation(() => blockUsers(userIds).unwrap(), onSelectionClear);
+    await executeUserOperation(() => changeStatusUsers({userIds, status: BLOCKED}).unwrap(), onSelectionClear);
   };
   const handleUnblockUsers = async (userIds) => {
-    await executeUserOperation(() => unblockUsers(userIds).unwrap(), onSelectionClear);
+    await executeUserOperation(() => changeStatusUsers({userIds, status: ACTIVITY}).unwrap(), onSelectionClear);
   };
 
   const handleDeleteUsers = async (userIds) => {

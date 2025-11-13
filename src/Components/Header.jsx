@@ -20,7 +20,9 @@ export function Header() {
       navigate('/login');
     }
   };
-
+ const handleProfile = () => {
+          navigate('/profile');
+  };
   return (
     <Box sx={{ display: 'flex', maxHeight:'10vh' ,justifyContent: 'space-between', alignItems: 'center', p: 3, boxSizing:'border-box' , borderBottom: 1, borderColor: 'divider' }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -35,6 +37,9 @@ export function Header() {
         <Typography>{user?.email}</Typography>
         <Button variant="outlined" onClick={handleLogout}>
           Logout
+        </Button>
+         <Button variant="outlined" onClick={handleProfile}>
+          Profile
         </Button>
         <ThemeToggle/>
       </Box>
