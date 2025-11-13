@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useCreateSalesforceAccountMutation } from './authApi';
+import { useCreateSalesforceAccountMutation } from '../services/authApi';
 
 const SalesforceProfileForm = () => {
   const [createSalesforceAccount, { isLoading, isSuccess, error }] = useCreateSalesforceAccountMutation();
