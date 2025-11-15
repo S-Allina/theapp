@@ -2,7 +2,6 @@ import React from 'react';
 import { useCreateSalesforceAccountMutation } from '../services/authApi';
 import SalesforceProfileForm from '../Components/SalesforceProfileForm';
 
-// Можно добавить тестовую кнопку для разработки
 const TestSalesforceButton = () => {
   const [createSalesforceAccount] = useCreateSalesforceAccountMutation();
   
@@ -33,10 +32,8 @@ export const UserProfilePage = () => {
       <h1>My Profile</h1>
       
       <div className="profile-sections">
-        {/* Основная информация пользователя */}
         <section className="basic-info">
           <h2>Basic Information</h2>
-          {/* Твоя текущая форма профиля */}
         </section>
         
         {/* Salesforce интеграция */}

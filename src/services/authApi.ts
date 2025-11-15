@@ -30,7 +30,7 @@ export const authApi = createApi({
         body: credentials,
         credentials: 'include',
       }),
-       
+
       transformResponse: (response: ApiResponse<LoginResponse>) => {
         console.log(response);
         if (response.isSuccess && response.result && response.returnUrl) {
@@ -38,7 +38,7 @@ export const authApi = createApi({
           localStorage.setItem('userName', response.result.userName);
           localStorage.setItem('userEmail', response.result.email);
         }
-         if (response.isSuccess && response.result && response.result.Status != 'Blocked') {
+        if (response.isSuccess && response.result && response.result.Status != 'Blocked') {
           localStorage.setItem('userId', response.result.id);
           localStorage.setItem('userEmail', response.result.email);
           localStorage.setItem('emailConfirmed', response.result.emailConfirmed.toString());
@@ -68,12 +68,13 @@ export const authApi = createApi({
       }),
     }),
     createSalesforceAccount: builder.mutation<ApiResponse<boolean>, UserAdditionalInfoDto>({
-  query: (userInfo) => ({
-    url: '/auth/create-salesforce-account',
-    method: 'POST',
-    body: userInfo,
-  }),
-}),
+      query: (userInfo) => ({
+        url: '/auth/create-salesforce-account',
+        method: 'POST',
+        body: userInfo,
+        credentials: 'include',
+      }),
+    }),
     resetPassword: builder.mutation<ApiResponse<boolean>, ResetPasswordDto>({
       query: (resetPasswordRequest) => ({
         url: '/auth/reset-password',
@@ -87,7 +88,7 @@ export const authApi = createApi({
         method: 'POST',
         credentials: 'include',
       }),
-      
+
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -126,13 +127,13 @@ interface LoginResponse {
   id: string;
   userName: string;
   email: string;
-  firstName : string;
-lastName: string;
-emailConfirmed : boolean;
-Status : string;
-theme : string;
-language : string;
-role: string;
+  firstName: string;
+  lastName: string;
+  emailConfirmed: boolean;
+  Status: string;
+  theme: string;
+  language: string;
+  role: string;
 }
 
 interface RegisterRequest {
