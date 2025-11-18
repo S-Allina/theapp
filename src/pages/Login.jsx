@@ -72,16 +72,6 @@ export function Login() {
     }
   }, [location]);
 
-const handleGoogleLogin = () => {
-  const clientId = "MainMVCApp";
-  const redirectUri = `${urls.MAIN}/signin-oidc`;
-  const scope = "openid profile email api1";
-  
-  const authUrl = `${urls.AUTH}/connect/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scope)}&prompt=login`;
-  
-  window.location.href = authUrl;
-};
-
   const onSubmit = async (data) => {
     setLoginError(null);
     try {

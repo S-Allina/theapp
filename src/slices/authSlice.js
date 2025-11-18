@@ -1,32 +1,41 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-
+import urls from '../../url';
 const initialState = {
-  isAuthenticated: false,
+   isAuthenticated: false,
   user: null,
   isLoading: false,
   error: null,
+  theme: 'dark',
 };
 
 
 
-export const checkAuth = createAsyncThunk('auth/checkAuth', async () => {
-  const userId = localStorage.getItem('userId');
-  const email = localStorage.getItem('email');
+export const checkAuth = createAsyncThunk('auth/checkAuth',
+  async () => {
+    try {
+      const response = await fetch(`${urls.AUTH}/api/auth/check-auth`, {
+        credentials: 'include',
+      });
 
-  if (email || userId) {
-    return {
-      isAuthenticated: true,
-      user: {
-        userId: userId
-      },
-    };
-  } else {
-    return {
-      isAuthenticated: false,
-      user: null,
-    };
-  }
-});
+      if (response.ok) {
+        const authData = await response.json();
+        return authData;
+      }
+      
+      return {
+        isAuthenticated: false,
+        user: null,
+        theme: 'dark'
+      };
+    } catch (error) {
+      console.error('Auth check failed:', error);
+      return {
+        isAuthenticated: false,
+        user: null,
+        theme: 'dark'
+      };
+    }
+  });
 
 export const authSlice = createSlice({
   name: 'auth',
@@ -61,7 +70,12 @@ export const authSlice = createSlice({
     },
     clearError: (state) => {
       state.error = null;
-    }
+    },
+    updateUser: (state, action) => {
+      if (state.user) {
+        state.user = { ...state.user, ...action.payload };
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -79,10 +93,12 @@ export const authSlice = createSlice({
       })
       .addCase(checkAuth.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message;
-      })      
+        state.isAuthenticated = false;
+        state.user = null;
+        state.error = action.error.message || 'Auth check failed';
+      })     
   },
 });
 
-export const { login, logout, register, clearError, toggleTheme, setTheme } = authSlice.actions;
+export const { login, logout, register, clearError, toggleTheme, setTheme, updateUser } = authSlice.actions;
 export default authSlice.reducer;

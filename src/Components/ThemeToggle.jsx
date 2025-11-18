@@ -6,8 +6,9 @@ import { toggleTheme } from '../slices/authSlice';
 
 const ThemeToggle = () => {
   const theme = useSelector((state) => state.auth.theme);
-    const normalized = theme?.toLowerCase();
-
+  // Нормализуем тему с обработкой undefined
+  const normalizedTheme = theme?.toLowerCase() || 'light';
+  
   const dispatch = useDispatch();
 
   const handleToggle = () => {
@@ -15,13 +16,12 @@ const ThemeToggle = () => {
   };
 
   return (
-    <Tooltip title={`Switch to ${normalized === 'light' ? 'dark' : 'light'} mode`}>
+    <Tooltip title={`Switch to ${normalizedTheme === 'light' ? 'dark' : 'light'} mode`}>
       <IconButton onClick={handleToggle} color="inherit">
-        {normalized === 'light' ? <DarkMode /> : <LightMode />}
+        {normalizedTheme === 'light' ? <DarkMode /> : <LightMode />}
       </IconButton>
     </Tooltip>
   );
 };
 
 export default ThemeToggle;
-

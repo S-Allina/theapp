@@ -4,7 +4,7 @@ import { Provider, useSelector } from 'react-redux';
 import { store } from './app/store';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
-import PrivateRoute from './routers/PrivateRoute';
+import {PrivateRoute} from './routers/PrivateRoute';
 import { Header } from './Components/Header';
 import { ResetPassword } from './pages/ResetPassword';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -13,17 +13,13 @@ import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { setTheme } from './slices/authSlice';
 import { UserProfilePage } from './pages/UserProfilePage';
+
 const ThemeWrapper = ({ children }) => {
   const themeMode = useSelector((state) => state.auth.theme);
-  const state = useSelector((state) => state);
-  const normalized = 'light';
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (localStorage.getItem('token')) {
-      // updateTheme({ theme: themeMode });
-    }
-  }, [themeMode]);
+  // Нормализуем тему, с обработкой случая когда themeMode undefined
+  const normalizedTheme = themeMode?.toLowerCase() || 'light';
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -32,9 +28,14 @@ const ThemeWrapper = ({ children }) => {
     }
   }, [dispatch]);
 
+  // Сохраняем тему в localStorage при изменении
+  useEffect(() => {
+    localStorage.setItem('theme', normalizedTheme);
+  }, [normalizedTheme]);
+
   const theme = createTheme({
     palette: {
-      mode: normalized,
+      mode: normalizedTheme, // Используем нормализованную тему из Redux
     },
   });
 
@@ -61,7 +62,6 @@ const App = () => {
                 element={
                   <>
                     <Header />
-
                     <UserProfilePage />
                   </>
                 }

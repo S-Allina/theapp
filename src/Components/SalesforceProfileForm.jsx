@@ -1,13 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import {
+  Box,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  Grid,
+  Alert,
+  CircularProgress,
+  Card,
+  CardContent,
+  MenuItem,
+  InputAdornment,
+  Container,
+} from '@mui/material';
+import {
+  Person as PersonIcon,
+  Business as BusinessIcon,
+  LocationOn as LocationIcon,
+  Email as EmailIcon,
+  Phone as PhoneIcon,
+  Language as LanguageIcon,
+  Work as WorkIcon,
+  CheckCircle as CheckCircleIcon,
+} from '@mui/icons-material';
 import { useCreateSalesforceAccountMutation } from '../services/authApi';
+import { useSelector } from 'react-redux';
 
 const SalesforceProfileForm = () => {
-  const [createSalesforceAccount, { isLoading, isSuccess, error }] = useCreateSalesforceAccountMutation();
-  
+  const [createSalesforceAccount, { isLoading, isSuccess, error }] =
+    useCreateSalesforceAccountMutation();
+  const { user } = useSelector((state) => state.auth);
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    email: localStorage.getItem('userEmail') || '',
+    email: '',
     phone: '',
     companyName: '',
     industry: '',
@@ -17,13 +45,38 @@ const SalesforceProfileForm = () => {
     street: '',
     city: '',
     country: '',
-    leadSource: 'Website Registration'
+    leadSource: 'Website Registration',
   });
 
-  const handleSubmit = async() => {
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        companyName: user.companyName || '',
+        jobTitle: user.jobTitle || '',
+      }));
+    }
+  }, [user]);
+
+  const industries = [
+    { value: '', label: 'Select Industry' },
+    { value: 'IT', label: 'Information Technology' },
+    { value: 'Finance', label: 'Finance' },
+    { value: 'Healthcare', label: 'Healthcare' },
+    { value: 'Education', label: 'Education' },
+    { value: 'Retail', label: 'Retail' },
+    { value: 'Manufacturing', label: 'Manufacturing' },
+    { value: 'Other', label: 'Other' },
+  ];
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       await createSalesforceAccount(formData).unwrap();
-      // Показать сообщение об успехе
     } catch (err) {
       console.error('Failed to create Salesforce account:', err);
     }
@@ -31,136 +84,324 @@ const SalesforceProfileForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  if (isSuccess) {
-    return (
-      <div className="success-message">
-        <h3>✅ Profile successfully synced with Salesforce!</h3>
-        <p>Your information has been saved in our CRM system.</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="salesforce-form">
-      <h2>Complete Your CRM Profile</h2>
-      <p>Fill out this form to sync your profile with our customer management system.</p>
-      
-      <form onSubmit={handleSubmit}>
-        <div className="form-section">
-          <h3>Personal Information</h3>
-          <input
-            type="text"
-            name="firstName"
-            placeholder="First Name"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Last Name"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="tel"
-            name="phone"
-            placeholder="Phone"
-            value={formData.phone}
-            onChange={handleChange}
-          />
-        </div>
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Paper elevation={2} sx={{ p: 4, borderRadius: 2 }}>
+        <Box textAlign="center" mb={4}>
+          <Typography variant="h3" component="h1" gutterBottom color="primary" fontWeight="bold">
+            Complete Your CRM Profile
+          </Typography>
+          <Typography variant="h6" color="text.secondary">
+            {user
+              ? `Welcome back, ${user.firstName}! Complete your Salesforce profile.`
+              : 'Sync your profile with our Salesforce CRM'}
+          </Typography>
+        </Box>
 
-        <div className="form-section">
-          <h3>Company Information</h3>
-          <input
-            type="text"
-            name="companyName"
-            placeholder="Company Name"
-            value={formData.companyName}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="jobTitle"
-            placeholder="Job Title"
-            value={formData.jobTitle}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="department"
-            placeholder="Department"
-            value={formData.department}
-            onChange={handleChange}
-          />
-          <select name="industry" value={formData.industry} onChange={handleChange}>
-            <option value="">Select Industry</option>
-            <option value="IT">Information Technology</option>
-            <option value="Finance">Finance</option>
-            <option value="Healthcare">Healthcare</option>
-            <option value="Education">Education</option>
-            <option value="Retail">Retail</option>
-            <option value="Other">Other</option>
-          </select>
-          <input
-            type="url"
-            name="website"
-            placeholder="Website"
-            value={formData.website}
-            onChange={handleChange}
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={6}>
+              <Card sx={{ height: '100%', boxShadow: 2 }}>
+                <CardContent sx={{ p: 3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                    <PersonIcon color="primary" sx={{ mr: 1, fontSize: 28 }} />
+                    <Typography variant="h5" fontWeight="600">
+                      Personal Information
+                    </Typography>
+                  </Box>
 
-        <div className="form-section">
-          <h3>Address (Optional)</h3>
-          <input
-            type="text"
-            name="street"
-            placeholder="Street"
-            value={formData.street}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="city"
-            placeholder="City"
-            value={formData.city}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="country"
-            placeholder="Country"
-            value={formData.country}
-            onChange={handleChange}
-          />
-        </div>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        fullWidth
+                        label="First Name *"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        required
+                        variant="outlined"
+                        size="medium"
+                        disabled={isSuccess}
+                        placeholder={user?.firstName ? `Current: ${user.firstName}` : ''}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        fullWidth
+                        label="Last Name *"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        required
+                        variant="outlined"
+                        size="medium"
+                        disabled={isSuccess}
+                        placeholder={user?.lastName ? `Current: ${user.lastName}` : ''}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Email *"
+                        name="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        variant="outlined"
+                        size="medium"
+                        disabled={isSuccess}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <EmailIcon color="action" />
+                            </InputAdornment>
+                          ),
+                        }}
+                        placeholder={user?.email ? `Current: ${user.email}` : ''}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Phone"
+                        name="phone"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        variant="outlined"
+                        size="medium"
+                        disabled={isSuccess}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <PhoneIcon color="action" />
+                            </InputAdornment>
+                          ),
+                        }}
+                        placeholder={user?.phone ? `Current: ${user.phone}` : 'Add phone number'}
+                      />
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
 
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? 'Saving to CRM...' : 'Save to Salesforce CRM'}
-        </button>
-        
-        {error && (
-          <div className="error-message">
-            Error: {('data' in error && (error.data).displayMessage) || 'Failed to save profile'}
-          </div>
-        )}
-      </form>
-    </div>
+            <Grid item xs={12} md={6}>
+              <Card sx={{ height: '100%', boxShadow: 2 }}>
+                <CardContent sx={{ p: 3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                    <BusinessIcon color="primary" sx={{ mr: 1, fontSize: 28 }} />
+                    <Typography variant="h5" fontWeight="600">
+                      Company Information
+                    </Typography>
+                  </Box>
+
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Company Name"
+                        name="companyName"
+                        value={formData.companyName}
+                        onChange={handleChange}
+                        variant="outlined"
+                        size="medium"
+                        disabled={isSuccess}
+                        placeholder={
+                          user?.companyName
+                            ? `Current: ${user.companyName}`
+                            : 'Enter your company name'
+                        }
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Job Title"
+                        name="jobTitle"
+                        value={formData.jobTitle}
+                        onChange={handleChange}
+                        variant="outlined"
+                        size="medium"
+                        disabled={isSuccess}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <WorkIcon color="action" />
+                            </InputAdornment>
+                          ),
+                        }}
+                        placeholder={
+                          user?.jobTitle ? `Current: ${user.jobTitle}` : 'Enter your job title'
+                        }
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Department"
+                        name="department"
+                        value={formData.department}
+                        onChange={handleChange}
+                        variant="outlined"
+                        size="medium"
+                        disabled={isSuccess}
+                        placeholder="Enter your department"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        select
+                        label="Industry"
+                        name="industry"
+                        value={formData.industry}
+                        onChange={handleChange}
+                        variant="outlined"
+                        size="medium"
+                        disabled={isSuccess}
+                      >
+                        {industries.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Website"
+                        name="website"
+                        type="url"
+                        value={formData.website}
+                        onChange={handleChange}
+                        variant="outlined"
+                        size="medium"
+                        disabled={isSuccess}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <LanguageIcon color="action" />
+                            </InputAdornment>
+                          ),
+                        }}
+                        placeholder="Enter company website"
+                      />
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12}>
+              <Card sx={{ boxShadow: 2 }}>
+                <CardContent sx={{ p: 3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                    <LocationIcon color="primary" sx={{ mr: 1, fontSize: 28 }} />
+                    <Typography variant="h5" fontWeight="600">
+                      Address Information (Optional)
+                    </Typography>
+                  </Box>
+
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Street Address"
+                        name="street"
+                        value={formData.street}
+                        onChange={handleChange}
+                        variant="outlined"
+                        size="medium"
+                        disabled={isSuccess}
+                        placeholder="Enter street address"
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        fullWidth
+                        label="City"
+                        name="city"
+                        value={formData.city}
+                        onChange={handleChange}
+                        variant="outlined"
+                        size="medium"
+                        disabled={isSuccess}
+                        placeholder="Enter city"
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        fullWidth
+                        label="Country"
+                        name="country"
+                        value={formData.country}
+                        onChange={handleChange}
+                        variant="outlined"
+                        size="medium"
+                        disabled={isSuccess}
+                        placeholder="Enter country"
+                      />
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+          {user && (
+            <Alert severity="info" sx={{ mt: 3, mb: 2 }}>
+              <Typography variant="body2">
+                <strong>Your current profile:</strong> {user.firstName} {user.lastName} •{' '}
+                {user.email}
+                {user.companyName && ` • ${user.companyName}`}
+                {user.jobTitle && ` • ${user.jobTitle}`}
+                {user.role && ` • ${user.role}`}
+              </Typography>
+            </Alert>
+          )}
+          {error && (
+            <Alert severity="error" sx={{ mt: 2, mb: 2 }}>
+              Error: {('data' in error && error.data.displayMessage) || 'Failed to save profile'}
+            </Alert>
+          )}
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={isLoading || isSuccess || !formData.firstName || !formData.lastName || !formData.email}
+              startIcon={
+                isLoading ? <CircularProgress size={20} /> : 
+                isSuccess ? <CheckCircleIcon /> : null
+              }
+              size="large"
+              sx={{
+                px: 6,
+                py: 1.5,
+                fontSize: '1.1rem',
+                borderRadius: 2,
+                ...(isSuccess && {
+                  backgroundColor: 'success.main',
+                  '&:hover': {
+                    backgroundColor: 'success.dark',
+                  },
+                }),
+              }}
+            >
+              {isLoading 
+                ? 'Saving to CRM...' 
+                : isSuccess 
+                ? 'Successfully Saved to CRM!' 
+                : 'Save to Salesforce CRM'
+              }
+            </Button>
+          </Box>
+        </form>
+      </Paper>
+    </Container>
   );
 };
 

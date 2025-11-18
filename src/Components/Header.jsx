@@ -28,7 +28,7 @@ export function Header() {
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
       <Typography variant="h6">The app</Typography>
        <a href={urls.MAIN} rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-  <Button variant="text" sx={{ textTransform: 'none' }}>
+  <Button variant="text" sx={{ textTransform: 'none', fontSize:'20px' }}>
     Inventories
   </Button>
 </a>

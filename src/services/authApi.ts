@@ -17,11 +17,13 @@ export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: baseQuery,
   endpoints: (builder) => ({
-    getCurrentUser: builder.query<ApiResponse<LoginResponse>, void>({
+    getCurrentUser: builder.query<ApiResponse<User>, void>({
       query: () => ({
         url: '/auth/me',
         method: 'GET',
+        credentials: 'include',
       }),
+      providesTags: ['Users'],
     }),
     loginUser: builder.mutation<ApiResponse<LoginResponse>, LoginRequest>({
       query: (credentials) => ({
@@ -160,6 +162,27 @@ interface ResetPasswordDto {
   email: string;
   newPassword: string;
   token: string;
+}
+export interface User {
+  id: string;
+  userName: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  emailConfirmed: boolean;
+  status: string;
+  theme: string;
+  language: string;
+  role: string;
+  phone?: string;
+  companyName?: string;
+  jobTitle?: string;
+}
+
+export interface AuthCheckResponse {
+  isAuthenticated: boolean;
+  user: User | null;
+  theme: string;
 }
 
 interface UserAdditionalInfoDto {

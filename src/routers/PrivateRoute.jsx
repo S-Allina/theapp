@@ -1,53 +1,43 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { checkAuth, setTheme } from '../slices/authSlice';
-import urls from '../../url';
+import { checkAuth } from '../slices/authSlice';
+import {Box, CircularProgress, Typography } from '@mui/material';
 
-const PrivateRoute = () => {
-  const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
+export const PrivateRoute = () => {
+  const { isAuthenticated, isLoading, user } = useSelector((state) => state.auth);
   const [checkingAuth, setCheckingAuth] = useState(true);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const verifyAuth = async () => {
       try {
-        const response = await fetch(`${urls.AUTH}/api/auth/check-auth`, {
-          credentials: 'include', 
-        });
-
-        if (response.ok) {
-          const authData = await response.json();
-
-          if (authData.isAuthenticated) {
-            dispatch(checkAuth.fulfilled(authData));
-            dispatch(setTheme(authData?.theme || "dark"));
-            
-          } else {
-            dispatch(checkAuth.rejected());
-          }
-        }
+        await dispatch(checkAuth());
       } catch (error) {
         console.error('Auth check failed:', error);
-        dispatch(checkAuth.rejected());
       } finally {
         setCheckingAuth(false);
       }
     };
 
-    if (!isAuthenticated && !isLoading) {
+    if (!isAuthenticated) {
       verifyAuth();
     } else {
       setCheckingAuth(false);
     }
-  }, [isAuthenticated, isLoading, dispatch]);
+  }, [isAuthenticated, dispatch]);
 
   if (checkingAuth || isLoading) {
-    return <div>Checking authentication...</div>;
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+        <CircularProgress />
+        <Typography variant="body1" sx={{ ml: 2 }}>
+          Checking authentication...
+        </Typography>
+      </Box>
+    );
   }
 
-  console.log('isAuthenticated', isAuthenticated);
+  console.log('Current user:', user); // Теперь здесь полная информация о пользователе
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };
-
-export default PrivateRoute;

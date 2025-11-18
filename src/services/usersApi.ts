@@ -67,7 +67,7 @@ export const usersApi = createApi({
         }
         throw new Error(response.errorMessages?.join('.') || 'Failed to fetch user');
       },
-      providesTags: ['User'],
+      providesTags: ['Users'],
     }),
     changeStatusUsers: builder.mutation<ResponseDto, { userIds: string[], status: string }>({
       query: ({ userIds, status }) => ({

@@ -29,17 +29,9 @@ const TestSalesforceButton = () => {
 export const UserProfilePage = () => {
   return (
     <div className="user-profile">
-      <h1>My Profile</h1>
-      
       <div className="profile-sections">
-        <section className="basic-info">
-          <h2>Basic Information</h2>
-        </section>
         
-        {/* Salesforce интеграция */}
         <section className="crm-integration">
-          <h2>CRM Integration</h2>
-          <p>Complete your profile to sync with our customer management system.</p>
           <SalesforceProfileForm />
           <TestSalesforceButton/>
         </section>
