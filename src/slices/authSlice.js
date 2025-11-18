@@ -51,7 +51,7 @@ export const authSlice = createSlice({
       localStorage.setItem('theme', action.payload);
     },
     toggleTheme: (state) => {
-      state.theme = state.theme === 'light' ? 'dark' : 'light';
+      state.theme = state.theme === 'light' ? 'light' : 'dark';
       localStorage.setItem('theme', state.theme);
     },
     setTheme: (state, action) => {

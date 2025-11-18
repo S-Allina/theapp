@@ -16,7 +16,7 @@ const ThemeToggle = () => {
   };
 
   return (
-    <Tooltip title={`Switch to ${normalizedTheme === 'light' ? 'dark' : 'light'} mode`}>
+    <Tooltip title={`Switch to ${normalizedTheme === 'light' ? 'light' : 'dark'} mode`}>
       <IconButton onClick={handleToggle} color="inherit">
         {normalizedTheme === 'light' ? <DarkMode /> : <LightMode />}
       </IconButton>

@@ -78,7 +78,7 @@ export default function Users() {
             `${urls.AUTH}/Account/Login?returnUrl=/connect/authorize?client_id=MainMVCApp&redirect_uri=${urls.MAIN}/signin-oidc&response_type=code&scope=openid profile email api1`;
         } else {
           const authData = await response.json();
-          dispatch(setTheme(authData?.theme || 'dark'));
+          dispatch(setTheme(authData?.theme || 'light'));
         }
       } catch (error) {
         console.error('Auth check failed:', error);
