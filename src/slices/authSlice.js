@@ -5,7 +5,7 @@ const initialState = {
   user: null,
   isLoading: false,
   error: null,
-  theme: 'dark',
+  theme: 'light',
 };
 
 
@@ -25,14 +25,14 @@ export const checkAuth = createAsyncThunk('auth/checkAuth',
       return {
         isAuthenticated: false,
         user: null,
-        theme: 'dark'
+        theme: 'light'
       };
     } catch (error) {
       console.error('Auth check failed:', error);
       return {
         isAuthenticated: false,
         user: null,
-        theme: 'dark'
+        theme: 'light'
       };
     }
   });
