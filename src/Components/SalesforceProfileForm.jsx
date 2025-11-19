@@ -256,6 +256,7 @@ const SalesforceProfileForm = () => {
                     <Grid item xs={12}>
                       <TextField
                         fullWidth
+                        minWidth="40px"
                         select
                         label="Industry"
                         name="industry"

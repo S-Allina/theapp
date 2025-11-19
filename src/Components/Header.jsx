@@ -39,7 +39,7 @@ export function Header() {
           Logout
         </Button>
          <Button variant="outlined" onClick={handleProfile}>
-          Profile
+          Profile CRM
         </Button>
         <ThemeToggle/>
       </Box>
