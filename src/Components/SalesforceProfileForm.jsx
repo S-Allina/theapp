@@ -264,7 +264,7 @@ const SalesforceProfileForm = () => {
                         variant="outlined"
                         size="medium"
                         disabled={isSuccess}
-                        style={{ minWidth: '60px' }}
+                        style={{ minWidth: '120px' }}
                       >
                         {industries.map((option) => (
                           <MenuItem key={option.value} value={option.value}>
