@@ -256,7 +256,6 @@ const SalesforceProfileForm = () => {
                     <Grid item xs={12}>
                       <TextField
                         fullWidth
-                        minWidth="40px"
                         select
                         label="Industry"
                         name="industry"
@@ -265,6 +264,7 @@ const SalesforceProfileForm = () => {
                         variant="outlined"
                         size="medium"
                         disabled={isSuccess}
+                        style={{ minWidth: '60px' }}
                       >
                         {industries.map((option) => (
                           <MenuItem key={option.value} value={option.value}>
@@ -373,10 +373,15 @@ const SalesforceProfileForm = () => {
             <Button
               type="submit"
               variant="contained"
-              disabled={isLoading || isSuccess || !formData.firstName || !formData.lastName || !formData.email}
+              disabled={
+                isLoading ||
+                isSuccess ||
+                !formData.firstName ||
+                !formData.lastName ||
+                !formData.email
+              }
               startIcon={
-                isLoading ? <CircularProgress size={20} /> : 
-                isSuccess ? <CheckCircleIcon /> : null
+                isLoading ? <CircularProgress size={20} /> : isSuccess ? <CheckCircleIcon /> : null
               }
               size="large"
               sx={{
@@ -392,12 +397,11 @@ const SalesforceProfileForm = () => {
                 }),
               }}
             >
-              {isLoading 
-                ? 'Saving to CRM...' 
-                : isSuccess 
-                ? 'Successfully Saved to CRM!' 
-                : 'Save to Salesforce CRM'
-              }
+              {isLoading
+                ? 'Saving to CRM...'
+                : isSuccess
+                ? 'Successfully Saved to CRM!'
+                : 'Save to Salesforce CRM'}
             </Button>
           </Box>
         </form>
