@@ -18,7 +18,6 @@ const ThemeWrapper = ({ children }) => {
   const themeMode = useSelector((state) => state.auth.theme);
   const dispatch = useDispatch();
 
-  // Нормализуем тему, с обработкой случая когда themeMode undefined
   const normalizedTheme = themeMode?.toLowerCase() || 'light';
 
   useEffect(() => {
